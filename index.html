@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Music App</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script src="script.js"></script>
+  </head>
+  <body>
+    
+    <div id="playback">
+      <h1>Playback music</h1>
+      <p id="displayFileData"></p>
+      <audio id="audio" controls>
+        <source src="Assets/tempBlankAudio.mp3" id="audioPlayback">
+      </audio>
+    </div>
+    
+    <div id="upload">
+      <h1>Upload file</h1>
+      <input type="file" accept=".mp3, .wav, .ogg" id="fileInput">
+      <p id="unsupportedFileType">File type not supported. Supported extentions: .mp3, .wav, .ogg</p>
+      
+      <div id="metadataForm">
+        <h3>Metadata</h3>
+        <form>
+          <label>Title</label><br>
+          <input type="text" id="title"><br>
+          <label>Artist</label><br>
+          <input type="text" id="artist"><br>
+          <label>Album</label><br>
+          <input type="text" id="album"><br>
+          <br>
+          <input type="button" onclick="addMetadata()" value="Save metadata">
+        </form>
+      </div>
+    </div>
+    
+  </body>
+</html>

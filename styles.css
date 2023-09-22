@@ -1,0 +1,74 @@
+body, h1, p, form {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: helvetica, sans-serif;
+  background-color: #2d2833;
+  color: #ffffff; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+#playback, #upload {
+  background-color: #1f1c24;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px;
+  box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.1);
+  text-align: center;
+}
+
+h1 {
+  color: #ffffff;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+#audioPlayback {
+  width: 100%;
+}
+
+#unsupportedFileType {
+  color: #ff6961;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+#metadataForm {
+  margin-top: 20px;
+}
+
+label {
+  font-weight: bold;
+  font-size: 16px;
+  color: #ffffff;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 5px;
+  margin: 5px 0;
+  border: 1px solid #423e47;
+  background-color: #423e47;
+  color: #ffffff;
+  border-radius: 5px;
+}
+
+input[type="button"] {
+  background-color: #c3addd;
+  color: #000;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
+  border-radius: 5px;
+}
+
+input[type="button"]:hover {
+  background-color: #786a88;
+}
