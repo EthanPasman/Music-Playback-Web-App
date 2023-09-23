@@ -1,39 +1,81 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title>Music App</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
     <script src="script.js"></script>
-  </head>
-  <body>
-    
+    <meta charset="UTF-8">
+</head>
+<body>
+
     <div id="playback">
-      <h1>Playback music</h1>
-      <p id="displayFileData"></p>
-      <audio id="audio" controls>
-        <source src="Assets/tempBlankAudio.mp3" id="audioPlayback">
-      </audio>
+        <h1>Playback music</h1>
+        <p id="displayFileData"></p>
+        <audio id="audio" controls>
+            <source src="Assets/tempBlankAudio.mp3" id="audioPlayback">
+        </audio>
     </div>
-    
+
     <div id="upload">
-      <h1>Upload file</h1>
-      <input type="file" accept=".mp3, .wav, .ogg" id="fileInput">
-      <p id="unsupportedFileType">File type not supported. Supported extentions: .mp3, .wav, .ogg</p>
-      
-      <div id="metadataForm">
-        <h3>Metadata</h3>
-        <form>
-          <label>Title</label><br>
-          <input type="text" id="title"><br>
-          <label>Artist</label><br>
-          <input type="text" id="artist"><br>
-          <label>Album</label><br>
-          <input type="text" id="album"><br>
-          <br>
-          <input type="button" onclick="addMetadata()" value="Save metadata">
-        </form>
-      </div>
+        <h1>Upload file</h1>
+        <input type="file" accept=".mp3, .wav, .ogg" id="fileInput">
+        <p id="unsupportedFileType">File type not supported. Supported extentions: .mp3, .wav, .ogg</p>
+
+        <div id="metadataForm">
+            <h3>Metadata</h3>
+            <form>
+                <input type="reset" id="formReset"><br><br>
+                <label>Title</label><br>
+                <input type="text" id="title"><br>
+                <label>Artist</label><br>
+                <input type="text" id="artist"><br>
+                <label>Album</label><br>
+                <input type="text" id="album">
+                <input type="button" onclick="extendForm()" value="More metadata" class="hyperlinkButton" id="extend"><br>
+                <input type="button" onclick="contractForm()" value="Less metadata" class="hyperlinkButton" id="contract"><br>
+                <br><div id="expandedForm">
+                    <label>Contributing Artists</label><br>
+                    <input type="text" id="contrArtists"><br>
+                    <label>Year</label><br>
+                    <input type="number" id="year"><br>
+                    <label>Genre</label><br>
+                    <input type="text" id="genre"><br>
+                    <label>Beats-per-minute</label><br>
+                    <input type="number" id="bpm"><br>
+                    <label>Rating</label><br>
+                    <div class="ratingscale">
+                        <input type="radio" id="star10" value="10">
+                        <label for="star10">★</label>
+                        <input type="radio" id="star9" value="9">
+                        <label for="star9">★</label>
+                        <input type="radio" id="star8" value="8">
+                        <label for="star8">★</label>
+                        <input type="radio" id="star7" value="7">
+                        <label for="star7">★</label>
+                        <input type="radio" id="star6" value="6">
+                        <label for="star6">★</label>
+                        <input type="radio" id="star5" value="5">
+                        <label for="star5">★</label>
+                        <input type="radio" id="star4" value="4">
+                        <label for="star4">★</label>
+                        <input type="radio" id="star3" value="3">
+                        <label for="star3">★</label>
+                        <input type="radio" id="star2" value="2">
+                        <label for="star2">★</label>
+                        <input type="radio" id="star1" value="1">
+                        <label for="star1">★</label>
+                        <label id="rating"></label>
+                    </div>
+                    <label>Comments</label><br>
+                    <input type="text" id="comments"><br>
+                    <label>Tags (separate by comma)</label><br>
+                    <input type="text" id="tags"><br>
+                </div>
+                <br>
+                <input type="button" onclick="addMetadata()" value="Save metadata">
+            </form>
+        </div>
     </div>
-    
-  </body>
+
+</body>
 </html>
