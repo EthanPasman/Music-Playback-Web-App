@@ -21,6 +21,7 @@
         <input type="file" accept=".mp3, .wav, .ogg" id="fileInput">
         <p id="unsupportedFileType">File type not supported. Supported extentions: .mp3, .wav, .ogg</p>
 
+        <!--TODO style lists and fix js functions, fix metadataform off page, fix expandedform button movement-->
         <div id="metadataForm">
             <h3>Metadata</h3>
             <form>
@@ -38,8 +39,38 @@
                     <input type="text" id="contrArtists"><br>
                     <label>Year</label><br>
                     <input type="number" id="year"><br>
-                    <label>Genre</label><br>
-                    <input type="text" id="genre"><br>
+                    <label>Genres</label><br>
+                    <label id="genreList" value=""></label>
+                    <input list="genreOptions" id="genre"><br>
+                    <datalist id="genreOptions">
+                        <option value="Pop">
+                        <option value="Dance">
+                        <option value="Rock">
+                        <option value="Metal">
+                        <option value="Punk">
+                        <option value="Industrial">
+                        <option value="Hip-hop">
+                        <option value="Rap">
+                        <option value="R&B">
+                        <option value="Blues">
+                        <option value="Ska">
+                        <option value="Folk">
+                        <option value="Country">
+                        <option value="Jazz">
+                        <option value="Psychedelia">
+                        <option value="Classical">
+                        <option value="Electronic">
+                        <option value="EDM">
+                        <option value="House">
+                        <option value="Techno">
+                        <option value="Drum & Bass">
+                        <option value="Dubstep">
+                        <option value="Ambient">
+                        <option value="Alternative">
+                        <option value="Indie">
+                        <option value="Experimental">
+                    </datalist>
+                    <input type="button" onclick="addGenre()" value="Add"><br>
                     <label>Beats-per-minute</label><br>
                     <input type="number" id="bpm"><br>
                     <label>Rating</label><br>
@@ -68,8 +99,31 @@
                     </div>
                     <label>Comments</label><br>
                     <input type="text" id="comments"><br>
-                    <label>Tags (separate by comma)</label><br>
-                    <input type="text" id="tags"><br>
+                    <label>Tags</label><br>
+                    <label id="tagList" value=""></label>
+                    <input list="tagOptions" id="tags"><br>
+                    <datalist id="tagOptions">
+                        <option value="Explicit">
+                        <option value="Instrumental">
+                        <option value="Vocals">
+                        <option value="Acoustic">
+                        <option value="Cover">
+                        <option value="Remix">
+                        <option value="Live">
+                        <option value="Upbeat">
+                        <option value="Melancholic">
+                        <option value="Chill">
+                        <option value="Energetic">
+                        <option value="Atmospheric">
+                    </datalist>
+                    <input type="button" onclick="addTag()" value="Add"><br>
+                    <input type="hidden" id="uploaded" value="">
+                    <input type="hidden" id="length" value="">
+                    <input type="hidden" id="listens" value="0">
+                    <input type="hidden" name="fullListens" value="0">
+                    <input type="hidden" name="playlists" value="">
+                    <input type="hidden" name="likeStatus" value="neutral">
+                    <input type="hidden" name="shuffleWeight" value="0.6">
                 </div>
                 <br>
                 <input type="button" onclick="addMetadata()" value="Save metadata">

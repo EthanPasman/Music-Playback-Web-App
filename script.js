@@ -32,6 +32,10 @@ document.addEventListener("DOMContentLoaded", function () {
     var expandedForm = document.getElementById("expandedForm");
     var formReset = document.getElementById("formReset");
     var rating = document.getElementById("rating");
+    var genreList = document.getElementById("genreList");
+    var tagList = document.getElementById("tagList");
+    var genres = []
+    var tags = []
 
     unsupportedFileType.style.display = "none";
     metadataForm.style.display = "none";
@@ -53,6 +57,18 @@ document.addEventListener("DOMContentLoaded", function () {
             rating.textContent = radioButton.value;
         });
     });
+
+    function addGenre() {
+        genres.push(document.getElementById(genre).value);
+        genreList.value = genres.toString();
+        document.getElementById(genre).value = "";
+    }
+
+    function addTag() {
+        tags.push(document.getElementById(tags).value);
+        tagList.value = tags.toString();
+        document.getElementById(tags).value = "";
+    }
 
     function fileListener() {
         unsupportedFileType.style.display = "none";
