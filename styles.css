@@ -46,10 +46,11 @@ label {
     font-weight: bold;
     font-size: 16px;
     color: #ffffff;
+    white-space: nowrap;
 }
 
-input[type="text"], input[type="number"] {
-    width: 100%;
+input[type="text"], input[type="number"], input[list] {
+    width: auto;
     padding: 5px;
     margin: 5px 0;
     border: 1px solid #423e47;
@@ -62,7 +63,7 @@ input[type="button"], input[type="reset"] {
     background-color: #c3addd;
     color: #000;
     border: none;
-    padding: 10px 20px;
+    padding: 5px 10px;
     font-size: 16px;
     cursor: pointer;
     margin-top: 10px;

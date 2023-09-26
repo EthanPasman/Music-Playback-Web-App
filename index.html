@@ -21,27 +21,24 @@
         <input type="file" accept=".mp3, .wav, .ogg" id="fileInput">
         <p id="unsupportedFileType">File type not supported. Supported extentions: .mp3, .wav, .ogg</p>
 
-        <!--TODO style lists and fix js functions, fix metadataform off page, fix expandedform button movement-->
         <div id="metadataForm">
             <h3>Metadata</h3>
             <form>
-                <input type="reset" id="formReset"><br><br>
-                <label>Title</label><br>
+                <label>Title</label>
                 <input type="text" id="title"><br>
-                <label>Artist</label><br>
+                <label>Artist</label>
                 <input type="text" id="artist"><br>
-                <label>Album</label><br>
-                <input type="text" id="album">
-                <input type="button" onclick="extendForm()" value="More metadata" class="hyperlinkButton" id="extend"><br>
+                <label>Album</label>
+                <input type="text" id="album"><br>
+                <input type="button" onclick="extendForm()" value="More metadata" class="hyperlinkButton" id="extend">
                 <input type="button" onclick="contractForm()" value="Less metadata" class="hyperlinkButton" id="contract"><br>
                 <br><div id="expandedForm">
-                    <label>Contributing Artists</label><br>
+                    <label>Contributing Artists</label>
                     <input type="text" id="contrArtists"><br>
-                    <label>Year</label><br>
-                    <input type="number" id="year"><br>
-                    <label>Genres</label><br>
-                    <label id="genreList" value=""></label>
-                    <input list="genreOptions" id="genre"><br>
+                    <label>Year</label>
+                    <input type="number" min="0" id="year"><br>
+                    <label>Genres</label>
+                    <input list="genreOptions" id="genre">
                     <datalist id="genreOptions">
                         <option value="Pop">
                         <option value="Dance">
@@ -71,8 +68,9 @@
                         <option value="Experimental">
                     </datalist>
                     <input type="button" onclick="addGenre()" value="Add"><br>
-                    <label>Beats-per-minute</label><br>
-                    <input type="number" id="bpm"><br>
+                    <label id="genreList"></label><br>
+                    <label>Beats-per-minute</label>
+                    <input type="number" min="0" id="bpm"><br>
                     <label>Rating</label><br>
                     <div class="ratingscale">
                         <input type="radio" id="star10" value="10">
@@ -97,11 +95,10 @@
                         <label for="star1">★</label>
                         <label id="rating"></label>
                     </div>
-                    <label>Comments</label><br>
+                    <label>Comments</label>
                     <input type="text" id="comments"><br>
-                    <label>Tags</label><br>
-                    <label id="tagList" value=""></label>
-                    <input list="tagOptions" id="tags"><br>
+                    <label>Tags</label>
+                    <input list="tagOptions" id="tags">
                     <datalist id="tagOptions">
                         <option value="Explicit">
                         <option value="Instrumental">
@@ -117,6 +114,7 @@
                         <option value="Atmospheric">
                     </datalist>
                     <input type="button" onclick="addTag()" value="Add"><br>
+                    <label id="tagList"></label><br>
                     <input type="hidden" id="uploaded" value="">
                     <input type="hidden" id="length" value="">
                     <input type="hidden" id="listens" value="0">
