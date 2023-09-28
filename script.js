@@ -47,13 +47,13 @@ function contractForm() {
 }
 
 function addGenre() {
-    genres.push(document.getElementById("genre").value);
+    genres.push(" " + document.getElementById("genre").value);
     document.getElementById("genreList").textContent = genres.toString();
     document.getElementById("genre").value = "";
 }
 
 function addTag() {
-    tags.push(document.getElementById("tags").value);
+    tags.push(" " + document.getElementById("tags").value);
     document.getElementById("tagList").textContent = tags.toString();
     document.getElementById("tags").value = "";
 }
