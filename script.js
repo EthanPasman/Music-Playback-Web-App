@@ -10,9 +10,9 @@ var playlists = [["", 0]]; //[Playlist name, Time added to playlist]
 function addMetadata() {
     var time = Date.now();
     var expandedForm = document.getElementById("expandedForm");
-    var ratingscale = expandedForm.querySelector("#ratingscale");
+    var ratingscale = expandedForm.querySelector("div.ratingscale");
     //Update fileData with input from metadataForm
-    //fileData[0] = file url
+    //fileData[0] = file url got on file upload
     fileData[1] = document.getElementById("title").value;
     fileData[2] = document.getElementById("artist").value;
     fileData[3] = document.getElementById("album").value;
@@ -20,11 +20,11 @@ function addMetadata() {
     fileData[5] = expandedForm.querySelector("#year").value;
     fileData[6] = expandedForm.querySelector("#bpm").value;
     fileData[7] = genres;
-    fileData[8] = ratingscale.querySelector("#rating").textContent; //TODO Fix this not updating
+    fileData[8] = ratingscale.querySelector("#rating").textContent;
     fileData[9] = expandedForm.querySelector("#comments").value;
     fileData[10] = tags;
     fileData[11] = time;
-    //fileData[12] = file length
+    //fileData[12] = file length got on audio load
     fileData[13] = expandedForm.querySelector("#listens").value;
     fileData[14] = expandedForm.querySelector("#fullListens").value;
     fileData[15] = playlists;
@@ -93,6 +93,13 @@ document.addEventListener("DOMContentLoaded", function () {
     var metadataForm = document.getElementById("metadataForm");
     var rating = document.getElementById("rating");
 
+    //Get audio duration from file upload on metadata load
+    audio.onloadedmetadata = function () {
+        var dur = audio.duration;
+        if (dur) {
+            fileData[12] = Math.round(dur);
+        }
+    }
 
     //Default visibilty of elements on page load
     unsupportedFileType.style.display = "none";
@@ -139,7 +146,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 //Add implicit metadata from file
                 fileData[0] = objURL;
-                fileData[12] = Math.round(audio.duration); //TODO Fix this duration NaN
 
                 metadataForm.style.display = "initial";
             } else {
