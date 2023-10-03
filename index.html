@@ -24,20 +24,26 @@
         <div id="metadataForm">
             <h3>Metadata</h3>
             <form>
+
                 <label>Title</label>
                 <input type="text" id="title"><br>
                 <label>Artist</label>
                 <input type="text" id="artist"><br>
                 <label>Album</label>
                 <input type="text" id="album"><br>
+
                 <input type="button" onclick="extendForm()" value="More metadata" class="hyperlinkButton" id="extend">
                 <input type="button" onclick="contractForm()" value="Less metadata" class="hyperlinkButton" id="contract"><br>
                 <br><div id="expandedForm">
+
                     <label>Contributing Artists</label>
                     <input type="text" id="contrArtists"><br>
                     <label>Year</label>
                     <input type="number" min="0" id="year"><br>
-                    <label>Genres</label>
+                    <label>Beats-per-minute</label>
+                    <input type="number" min="0" id="bpm"><br>
+                    
+                    <label>Genre(s)</label>
                     <input list="genreOptions" id="genre">
                     <datalist id="genreOptions">
                         <option value="Pop">
@@ -69,8 +75,7 @@
                     </datalist>
                     <input type="button" onclick="addGenre()" value="Add"><br>
                     <label id="genreList"></label><br>
-                    <label>Beats-per-minute</label>
-                    <input type="number" min="0" id="bpm"><br>
+                    
                     <label>Rating</label><br>
                     <div class="ratingscale">
                         <input type="radio" id="star10" value="10">
@@ -95,8 +100,10 @@
                         <label for="star1">★</label>
                         <label id="rating"></label>
                     </div>
-                    <label>Comments</label>
-                    <input type="text" id="comments"><br>
+                    
+                    <label>Comments</label><br>
+                    <textarea rows="3" id="comments"></textarea><br>
+                    
                     <label>Tags</label>
                     <input list="tagOptions" id="tags">
                     <datalist id="tagOptions">
@@ -115,13 +122,11 @@
                     </datalist>
                     <input type="button" onclick="addTag()" value="Add"><br>
                     <label id="tagList"></label><br>
-                    <input type="hidden" id="uploaded" value="">
-                    <input type="hidden" id="length" value="">
+                    
                     <input type="hidden" id="listens" value="0">
-                    <input type="hidden" name="fullListens" value="0">
-                    <input type="hidden" name="playlists" value="">
-                    <input type="hidden" name="likeStatus" value="neutral">
-                    <input type="hidden" name="shuffleWeight" value="0.6">
+                    <input type="hidden" id="fullListens" value="0">
+                    <input type="hidden" id="likeStatus" value="neutral">
+                    <input type="hidden" id="shuffleWeight" value="0.6">
                 </div>
                 <br>
                 <input type="button" onclick="addMetadata()" value="Save metadata">

@@ -49,14 +49,19 @@ label {
     white-space: nowrap;
 }
 
-input[type="text"], input[type="number"], input[list] {
+input[type="text"], input[type="number"], input[list], textarea {
     width: auto;
     padding: 5px;
-    margin: 5px 0;
+    margin: 5px 0px;
     border: 1px solid #423e47;
     background-color: #423e47;
     color: #ffffff;
     border-radius: 5px;
+}
+
+textarea {
+    resize: none;
+    width: 90%;
 }
 
 input[type="button"] {
