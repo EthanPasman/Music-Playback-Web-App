@@ -20,6 +20,7 @@ body {
     margin: 20px;
     box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.1);
     text-align: center;
+    width: 315px;
 }
 
 h1 {
@@ -49,8 +50,13 @@ label {
     white-space: nowrap;
 }
 
+#rating {
+    color: #ffdb58;
+}
+
 input[type="text"], input[type="number"], input[list], textarea {
     width: auto;
+    min-width: 50%;
     padding: 5px;
     margin: 5px 0px;
     border: 1px solid #423e47;
@@ -61,10 +67,11 @@ input[type="text"], input[type="number"], input[list], textarea {
 
 textarea {
     resize: none;
-    width: 90%;
+    padding: 0px;
+    width: 100%;
 }
 
-input[type="button"] {
+input[type="button"], input[type="file"] {
     background-color: #c3addd;
     color: #000;
     border: none;
@@ -75,8 +82,12 @@ input[type="button"] {
     border-radius: 5px;
 }
 
-input[type="button"]:hover {
+input[type="button"]:hover, input[type="file"]:hover {
     background-color: #786a88;
+}
+
+input[type="file"] {
+    max-width: 90%;
 }
 
 input[type="button"].hyperlinkButton {
@@ -89,6 +100,10 @@ input[type="button"].hyperlinkButton {
 
 input[type="button"].hyperlinkButton:focus {
     outline: none;
+}
+
+input:invalid {
+    border: 2px solid red;
 }
 
 .ratingscale {
