@@ -74,7 +74,7 @@
                         <option value="Experimental">
                     </datalist>
                     <input type="button" onclick="addGenre()" value="Add"><br>
-                    <label id="genreList"></label><br>
+                    <div id="genreList"></div><br>
                     
                     <label>Rating </label><label id="rating"></label><br>
                     <div class="ratingscale">
@@ -104,7 +104,7 @@
                     <textarea rows="3" id="comments"></textarea><br>
                     
                     <label>Tags</label>
-                    <input list="tagOptions" id="tags">
+                    <input list="tagOptions" id="tag">
                     <datalist id="tagOptions">
                         <option value="Explicit">
                         <option value="Instrumental">
@@ -120,7 +120,7 @@
                         <option value="Atmospheric">
                     </datalist>
                     <input type="button" onclick="addTag()" value="Add"><br>
-                    <label id="tagList"></label><br>
+                    <div id="tagList"></div><br>
                     
                     <input type="hidden" id="listens" value="0">
                     <input type="hidden" id="fullListens" value="0">

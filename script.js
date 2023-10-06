@@ -1,4 +1,4 @@
-var supportedExtensions = ["mp3", "wav", "ogg"];
+﻿var supportedExtensions = ["mp3", "wav", "ogg"];
 var fileData = ["", "", "", "", "", NaN, NaN, [], 0, "", [], 0, 0, 0, 0, [], "", 0];
                 //URL, Title, Artist, Album, Contributors, Year, BPM, Genre(s), Rating/10,
                 //Comments, Tags, Uploaded time, Length (s), # Listens, # Full listens, 
@@ -57,12 +57,16 @@ function inputValidation() {
 
 function clearForm() {
     //Manual form clear, resets all inputs and their values, as well as changed labels from input
-    document.getElementById("genreList").textContent = "";
-    document.getElementById("tagList").textContent = "";
+    var expandedForm = document.getElementById("expandedForm");
+    expandedForm.querySelector("#shuffleWeight").value = 0.6; //Default shuffle weight
     document.getElementById("rating").textContent = "";
     document.getElementById("comments").value = "";
+    //Clear lists of genres and tags
+    document.getElementById("genreList").replaceChildren();
+    document.getElementById("tagList").replaceChildren();
     genres = [];
     tags = [];
+
     var formElements = document.getElementById("metadataForm").getElementsByTagName("input");
     for (i = 0; i < formElements.length; i++) {
         var fieldType = formElements[i].type;
@@ -92,17 +96,71 @@ function contractForm() {
 }
 
 function addGenre() {
-    //TODO split, multiline, remove
-    genres.push(document.getElementById("genre").value);
-    document.getElementById("genreList").textContent = genres.join(", ");
+    var genre = document.getElementById("genre").value.trim();
+    var glDiv = document.getElementById("genreList");
+
+    if (genre.length == 0 || genres.includes(genre)) {
+        document.getElementById("genre").value = "";
+        return;
+    }
+    genres.push(genre);
+
+    var newGenre = document.createElement("input");
+    newGenre.type = "button";
+    newGenre.id = genre + "glBtn";
+    newGenre.onclick = function () { removeGenre(genre); };
+    //Shorten string for button if necessary
+    if (genre.length > 15) {
+        genre = genre.slice(0, 15) + "...";
+    }
+    newGenre.value = genre + " ✖";
+    glDiv.appendChild(newGenre);
+    //Scroll genre list if necessary
+    glDiv.scrollTop = glDiv.scrollHeight;
+
     document.getElementById("genre").value = "";
 }
 
+function removeGenre(genre) {
+    var glDiv = document.getElementById("genreList");
+    glDiv.removeChild(document.getElementById(genre + "glBtn"));
+    glDiv.scrollTop = glDiv.scrollHeight;
+    //Remove genre from array
+    genres = genres.filter(g => g != genre);
+}
+
 function addTag() {
-    //TODO split, multiline, remove
-    tags.push(document.getElementById("tags").value);
-    document.getElementById("tagList").textContent = tags.join(", ");
-    document.getElementById("tags").value = "";
+    var tag = document.getElementById("tag").value.trim();
+    var tlDiv = document.getElementById("tagList");
+
+    if (tag.length == 0 || tags.includes(tag)) {
+        document.getElementById("tag").value = "";
+        return;
+    }
+    tags.push(tag);
+
+    var newTag = document.createElement("input");
+    newTag.type = "button";
+    newTag.id = tag + "tlBtn";
+    newTag.onclick = function () { removeTag(tag); };
+    //Shorten string for button if necessary
+    if (tag.length > 15) {
+        tag = tag.slice(0, 15) + "...";
+    }
+    newTag.value = tag + " ✖";
+    tlDiv.appendChild(newTag);
+    //Scroll tag list if necessary
+    tlDiv.scrollTop = tlDiv.scrollHeight;
+
+    document.getElementById("tag").value = "";
+}
+
+function removeTag(tag) {
+    var tlDiv = document.getElementById("tagList");
+    tlDiv.removeChild(document.getElementById(tag + "tlBtn"));
+    tlDiv.scrollTop = tlDiv.scrollHeight;
+    //Remove tag from array
+    tags = tags.filter(t => t != tag);
 }
 
 document.addEventListener("DOMContentLoaded", function () {

@@ -78,7 +78,7 @@ input[type="button"], input[type="file"] {
     padding: 5px 10px;
     font-size: 16px;
     cursor: pointer;
-    margin-top: 10px;
+    margin: 5px 2px 0px 2px;
     border-radius: 5px;
 }
 
@@ -130,4 +130,9 @@ input:invalid {
 
 .ratingscale input[type="radio"]:checked ~ label {
     color: #ffdb58;
+}
+
+#genreList, #tagList {
+    max-height: 50px;
+    overflow-y: auto;
 }
