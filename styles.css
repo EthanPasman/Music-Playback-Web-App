@@ -136,3 +136,21 @@ input:invalid {
     max-height: 50px;
     overflow-y: auto;
 }
+
+#controls {
+    background-color: #131116;
+    border-radius: 10px;
+    width: auto;
+    height: auto;
+}
+
+#controls input {
+    background: none;
+    color: lightblue;
+    margin: 0px 0px;
+    padding: 2px 7px;
+}
+
+#play-pause, #prev, #skip {
+    width: 50px;
+}

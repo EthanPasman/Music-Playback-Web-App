@@ -1,11 +1,13 @@
 ﻿var supportedExtensions = ["mp3", "wav", "ogg"];
-var fileData = ["", "", "", "", "", NaN, NaN, [], 0, "", [], 0, 0, 0, 0, [], "", 0];
+var fileData = ["", "", "", "", "", NaN, NaN, [], 0, "", [], 0, 0, 0, 0, true, [], "", 0];
                 //URL, Title, Artist, Album, Contributors, Year, BPM, Genre(s), Rating/10,
                 //Comments, Tags, Uploaded time, Length (s), # Listens, # Full listens, 
-                //Playlists added to, Like/dislike/neutral, Shuffle weight
+                //Full listen flag, Playlists added to, Like/dislike/neutral, Shuffle weight
 var genres = [];
 var tags = [];
-var playlists = [["", 0]]; //[Playlist name, Time added to playlist]
+var playlists = []; //[Playlist name, Time added to playlist]
+var listeningQueue = [];
+var playHistory = [];
 
 function addMetadata() {
     var time = Date.now();
@@ -29,13 +31,26 @@ function addMetadata() {
     //fileData[12] = file length got on audio load
     fileData[13] = expandedForm.querySelector("#listens").value;
     fileData[14] = expandedForm.querySelector("#fullListens").value;
-    fileData[15] = playlists;
-    fileData[16] = expandedForm.querySelector("#likeStatus").value;
-    fileData[17] = expandedForm.querySelector("#shuffleWeight").value;
+    fileData[15] = true; //full listen flag
+    fileData[16] = [["Play History", time], ["Listening Queue", time]];
+    fileData[17] = expandedForm.querySelector("#likeStatus").value;
+    fileData[18] = expandedForm.querySelector("#shuffleWeight").value;
 
     console.log(fileData); //For testing purposes
 
-    document.getElementById("displayFileData").innerHTML = fileData[2] + " - " + fileData[1]; //Artist - title
+    listeningQueue.push(fileData);
+    //Send audio to playback source
+    //if (document.getElementById("audioPlayback").src.endsWith("Assets/tempBlankAudio.mp3")) {
+        document.getElementById("audioPlayback").src = fileData[0];
+        audio.load();
+
+        if (fileData[2].length > 0) {
+            document.getElementById("displayFileData").innerHTML = fileData[2] + " - " + fileData[1]; //Artist - title
+        } else {
+            document.getElementById("displayFileData").innerHTML = fileData[1]; //Title
+        }
+        playHistory.push(fileData);
+    //}
     clearForm();
     document.getElementById("metadataForm").style.display = "none";
 }
@@ -47,7 +62,6 @@ function inputValidation() {
     var bpm = expandedForm.querySelector("#bpm").value;
 
     if (year == "" || year % 1 != 0 || year < 0) {
-        console.log("test");
         expandedForm.querySelector("#year").value = NaN;
     }
     if (bpm == "" || bpm < 0) {
@@ -216,12 +230,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 var defaultTitle = fileNameParts.join("");
                 document.getElementById("title").value = defaultTitle;
 
-                //Send audio to playback source
                 var objURL = URL.createObjectURL(selectedFile);
-                document.getElementById("audioPlayback").src = objURL;
-                audio.load();
-
-                //Add implicit metadata from file
                 fileData[0] = objURL;
 
                 metadataForm.style.display = "initial";
@@ -231,4 +240,139 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
     fileInput.addEventListener("change", fileListener);
+
+    audio.addEventListener("ended", endSongListener);
 });
+
+function acPrev(playlist = playHistory) {
+    var audio = document.getElementById("audio");
+    audio.currentTime = 0;
+    if (audio.paused == false) {
+        audio.pause();
+        document.getElementById("play-pause").value = "▶";
+    }
+    //TODO return to start of previous song in playlist
+    /*var index = 0;
+    index = playlist.findIndex(song => song[0] == document.getElementById("audioPlayback").src); //Find index of playlist where songs source url matches
+
+    if (index < 0) {
+        return;
+    }
+
+    playlist[index][13]++; //Add listen to current song
+
+    if (index > 0) {
+        index--;
+
+        //Send prev audio to playback source
+        document.getElementById("audioPlayback").src = playlist[index][0];
+        if (playlist[index][2].length > 0) {
+            document.getElementById("displayFileData").innerHTML = playlist[index][2] + " - " + playlist[index][1]; //Artist - title
+        } else {
+            document.getElementById("displayFileData").innerHTML = playlist[index][1]; //Title
+        }
+        audio.load();
+    }*/
+}
+
+function acRestart() {
+    var audio = document.getElementById("audio");
+    audio.currentTime = 0;
+    if (audio.paused) {
+        audio.play();
+        document.getElementById("play-pause").value = "⏸";
+    }
+}
+
+function acRewind() {
+    //Go back 5 seconds
+    var audio = document.getElementById("audio");
+    if (audio.currentTime - 5 <= 0) {
+        audio.currentTime = 0;
+    } else {
+        audio.currentTime -= 5;
+    }
+}
+
+function acPlayPause() {
+    var audio = document.getElementById("audio");
+    var acpp = document.getElementById("play-pause");
+
+    if (audio.paused) {
+        audio.play();
+        acpp.value = "⏸";
+    } else {
+        audio.pause();
+        acpp.value = "▶";
+    }
+}
+
+function acFastForward() {
+    //Skip 5 seconds
+    var audio = document.getElementById("audio");
+    if (audio.currentTime + 5 >= audio.duration) {
+        audio.currentTime = audio.duration;
+    } else {
+        audio.currentTime += 5;
+    }
+    //fileData[15] = false;
+}
+
+function acLoop() {
+    var audio = document.getElementById("audio");
+    var acloop = document.getElementById("loop");
+
+    if (audio.loop == false) {
+        audio.loop = true;
+        acloop.style.color = "white";
+    } else {
+        audio.loop = false;
+        acloop.style.color = "lightblue";
+    }
+}
+
+function acSkip() {
+    var audio = document.getElementById("audio");
+    audio.currentTime = audio.duration;
+    //fileData[15] = false;
+}
+
+//Event listener for end of song
+function endSongListener() {
+    document.getElementById("play-pause").value = "▶";
+    nextSong();
+}
+
+function nextSong(playlist = listeningQueue) {
+    //TODO advance to next song
+    /*var index = 0;
+    index = playlist.findIndex(song => song[0] == document.getElementById("audioPlayback").src); //Find index of playlist where songs source url matches
+
+    if (index < 0) {
+        return;
+    }
+
+    //Add a listen and full listen is flag is true
+    playlist[index][13]++;
+    if (playlist[index][15]) {
+        playlist[index][14]++;
+    }
+
+    index++;
+    if (playlist.length >= index) {
+        if (playlist == listeningQueue) {
+            listeningQueue.shift();
+            index = 0;
+        }
+
+        //Send next audio to playback source
+        document.getElementById("audioPlayback").src = playlist[index][0];
+        if (playlist[index][2].length > 0) {
+            document.getElementById("displayFileData").innerHTML = playlist[index][2] + " - " + playlist[index][1]; //Artist - title
+        } else {
+            document.getElementById("displayFileData").innerHTML = playlist[index][1]; //Title
+        }
+        audio.load();
+        playHistory.push(playlist[index]);
+    }*/
+}

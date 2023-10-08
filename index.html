@@ -11,9 +11,21 @@
     <div id="playback">
         <h1>Playback music</h1>
         <p id="displayFileData"></p>
+        <div id="controls">
+            <input type="button" id="prev" value="«" onclick="acPrev()" title="Previous song">
+            <input type="button" id="restart" value="↩" onclick="acRestart()" title="Restart song">
+            <input type="button" id="rewind" value="‹" onclick="acRewind()" title="Rewind 5 seconds">
+            <input type="button" id="play-pause" value="▶" onclick="acPlayPause()"><!-- ▶ / ⏸ -->
+            <input type="button" id="fast-forward" value="›" onclick="acFastForward()" title="Fast-forward 5 seconds">
+            <input type="button" id="loop" value="↻" onclick="acLoop()" title="Loop song">
+            <input type="button" id="skip" value="»" onclick="acSkip()" title="Next song">
+        </div>
         <audio id="audio" controls preload="metadata">
             <source src="Assets/tempBlankAudio.mp3" id="audioPlayback">
         </audio>
+        <div id="lqueue">
+            <!--TODO listening queue-->
+        </div>
     </div>
 
     <div id="upload">
