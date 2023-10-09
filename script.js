@@ -1,13 +1,15 @@
 ﻿var supportedExtensions = ["mp3", "wav", "ogg"];
-var fileData = ["", "", "", "", "", NaN, NaN, [], 0, "", [], 0, 0, 0, 0, true, [], "", 0];
+var fileData = ["", "", "", "", "", NaN, NaN, [], 0, "", [], 0, 0, 0, 0, [], "", 0];
                 //URL, Title, Artist, Album, Contributors, Year, BPM, Genre(s), Rating/10,
                 //Comments, Tags, Uploaded time, Length (s), # Listens, # Full listens, 
-                //Full listen flag, Playlists added to, Like/dislike/neutral, Shuffle weight
+                //Playlists added to, Like/dislike/neutral, Shuffle weight
 var genres = [];
 var tags = [];
 var playlists = []; //[Playlist name, Time added to playlist]
 var listeningQueue = [];
 var playHistory = [];
+var flFlag = true;
+var seekTime = 0;
 
 function addMetadata() {
     var time = Date.now();
@@ -31,10 +33,9 @@ function addMetadata() {
     //fileData[12] = file length got on audio load
     fileData[13] = expandedForm.querySelector("#listens").value;
     fileData[14] = expandedForm.querySelector("#fullListens").value;
-    fileData[15] = true; //full listen flag
-    fileData[16] = [["Play History", time], ["Listening Queue", time]];
-    fileData[17] = expandedForm.querySelector("#likeStatus").value;
-    fileData[18] = expandedForm.querySelector("#shuffleWeight").value;
+    fileData[15] = [["Play History", time], ["Listening Queue", time]];
+    fileData[16] = expandedForm.querySelector("#likeStatus").value;
+    fileData[17] = expandedForm.querySelector("#shuffleWeight").value;
 
     console.log(fileData); //For testing purposes
 
@@ -43,7 +44,8 @@ function addMetadata() {
     //if (document.getElementById("audioPlayback").src.endsWith("Assets/tempBlankAudio.mp3")) {
         document.getElementById("audioPlayback").src = fileData[0];
         audio.load();
-
+        flFlag = true;
+        
         if (fileData[2].length > 0) {
             document.getElementById("displayFileData").innerHTML = fileData[2] + " - " + fileData[1]; //Artist - title
         } else {
@@ -272,6 +274,7 @@ function acPrev(playlist = playHistory) {
             document.getElementById("displayFileData").innerHTML = playlist[index][1]; //Title
         }
         audio.load();
+        flFlag = true;
     }*/
 }
 
@@ -282,6 +285,7 @@ function acRestart() {
         audio.play();
         document.getElementById("play-pause").value = "⏸";
     }
+    flFlag = true;
 }
 
 function acRewind() {
@@ -289,6 +293,7 @@ function acRewind() {
     var audio = document.getElementById("audio");
     if (audio.currentTime - 5 <= 0) {
         audio.currentTime = 0;
+        flFlag = true;
     } else {
         audio.currentTime -= 5;
     }
@@ -315,7 +320,7 @@ function acFastForward() {
     } else {
         audio.currentTime += 5;
     }
-    //fileData[15] = false;
+    flFlag = false;
 }
 
 function acLoop() {
@@ -334,7 +339,8 @@ function acLoop() {
 function acSkip() {
     var audio = document.getElementById("audio");
     audio.currentTime = audio.duration;
-    //fileData[15] = false;
+    flFlag = false;
+    endSongListener();
 }
 
 //Event listener for end of song
@@ -354,7 +360,7 @@ function nextSong(playlist = listeningQueue) {
 
     //Add a listen and full listen is flag is true
     playlist[index][13]++;
-    if (playlist[index][15]) {
+    if (flFlag) {
         playlist[index][14]++;
     }
 
@@ -374,5 +380,6 @@ function nextSong(playlist = listeningQueue) {
         }
         audio.load();
         playHistory.push(playlist[index]);
+        flFlag = true;
     }*/
 }
