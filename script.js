@@ -43,7 +43,7 @@ function addMetadata() {
     //Send audio to playback source
     //if (document.getElementById("audioPlayback").src.endsWith("Assets/tempBlankAudio.mp3")) {
         document.getElementById("audioPlayback").src = fileData[0];
-        audio.load();
+        document.getElementById("audio").load();
         flFlag = true;
         
         if (fileData[2].length > 0) {
@@ -97,6 +97,35 @@ function clearForm() {
         }
     }
     contractForm();
+}
+
+function hSettingsMenu() {
+    var menu = document.getElementById("settingsMenu");
+    if (menu.style.display != "initial") {
+        menu.style.display = "initial";
+    } else {
+        menu.style.display = "none";
+    }
+}
+
+function popoutPlayback() {
+    //TODO
+    var newWindow = window.open("popout.html", "_blank", "width=350, height=175, top=50");
+    if (fileData[0] != "") {
+        /*newWindow.document.getElementById("audioPlayback").src = fileData[0];
+        if (fileData[2].length > 0) {
+            newWindow.document.getElementById("displayFileData").innerHTML = fileData[2] + " - " + fileData[1]; //Artist - title
+        } else {
+            newWindow.document.getElementById("displayFileData").innerHTML = fileData[1]; //Title
+        }
+        newWindow.document.getElementById("audio").load();*/
+    }
+    //var playbackContent = document.getElementById("playback").innerHTML;
+    //newWindow.document.write(playbackContent);
+
+    document.getElementById("settingsMenu").style.display = "none";
+    //document.getElementById("playback").style.display = "none";
+    //newWindow.addEventListener("beforeunload", function () { document.getElementById("playback").style.display = "initial"; });
 }
 
 function extendForm() {
