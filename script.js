@@ -108,26 +108,6 @@ function hSettingsMenu() {
     }
 }
 
-function popoutPlayback() {
-    //TODO
-    var newWindow = window.open("popout.html", "_blank", "width=350, height=175, top=50");
-    if (fileData[0] != "") {
-        /*newWindow.document.getElementById("audioPlayback").src = fileData[0];
-        if (fileData[2].length > 0) {
-            newWindow.document.getElementById("displayFileData").innerHTML = fileData[2] + " - " + fileData[1]; //Artist - title
-        } else {
-            newWindow.document.getElementById("displayFileData").innerHTML = fileData[1]; //Title
-        }
-        newWindow.document.getElementById("audio").load();*/
-    }
-    //var playbackContent = document.getElementById("playback").innerHTML;
-    //newWindow.document.write(playbackContent);
-
-    document.getElementById("settingsMenu").style.display = "none";
-    //document.getElementById("playback").style.display = "none";
-    //newWindow.addEventListener("beforeunload", function () { document.getElementById("playback").style.display = "initial"; });
-}
-
 function extendForm() {
     extend.style.display = "none";
     contract.style.display = "initial";
@@ -214,6 +194,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var unsupportedFileType = document.getElementById("unsupportedFileType");
     var metadataForm = document.getElementById("metadataForm");
     var rating = document.getElementById("rating");
+    var expandedForm = document.getElementById("expandedForm");
 
     //Get audio duration from file upload on metadata load
     audio.onloadedmetadata = function () {
@@ -226,12 +207,11 @@ document.addEventListener("DOMContentLoaded", function () {
     //Default visibilty of elements on page load
     unsupportedFileType.style.display = "none";
     metadataForm.style.display = "none";
+    expandedForm.style.display = "none";
     document.getElementById("contract").style.display = "none";
-    document.getElementById("expandedForm").style.display = "none";
 
     //Update radiobuttons upon selection
     var radioButtons = document.querySelectorAll('input[type="radio"]');
-    var expandedForm = document.getElementById("expandedForm");
     radioButtons.forEach((radioButton) => {
         radioButton.addEventListener('change', () => {
             radioButtons.forEach((rb) => {
