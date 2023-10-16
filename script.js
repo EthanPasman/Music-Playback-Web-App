@@ -120,6 +120,37 @@ function contractForm() {
     expandedForm.style.display = "none";
 }
 
+function popoutPlayback() {
+    var newWindow = window.open("", "_blank", "width=400, height=175, top=50");
+    var customControls = document.getElementById("controls").innerHTML;
+    var displaymeta = "";
+    var head = '<!DOCTYPE html><html><head><title>Music App</title><link rel = "stylesheet" type = "text/css" href = "styles.css">' +
+        '<script src="script.js"></script><meta charset="UTF-8"></head><body><div id="playback">';
+
+    var src = "Assets/tempBlankAudio.mp3";
+    if (fileData[0].length > 0) {
+        src = fileData[0];
+        if (fileData[2].length > 0) {
+            displaymeta = fileData[2] + " - " + fileData[1]; //Artist - title
+        } else {
+            displaymeta = fileData[1]; //Title
+        }
+    }
+
+    //Write to new window
+    newWindow.document.open();
+    newWindow.document.write(head);
+    newWindow.document.write('<p>' + displaymeta + '</p>');
+    newWindow.document.write('<div id="controls">' + customControls + '</div>');
+    newWindow.document.write('<audio id="audio" controls preload="metadata"><source src = "' + src + '" id = "audioPlayback"></audio>');
+    newWindow.document.write('</div></body></html>');
+    newWindow.document.close();
+
+    document.getElementById("settingsMenu").style.display = "none";
+    document.getElementById("playback").style.display = "none"; //hide / unhide div on original page when popped out page is active / closed
+    newWindow.addEventListener("beforeunload", function () { document.getElementById("playback").style.display = "initial"; });
+}
+
 function addGenre() {
     var genre = document.getElementById("genre").value.trim();
     var glDiv = document.getElementById("genreList");
