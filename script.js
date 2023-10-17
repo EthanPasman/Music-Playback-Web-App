@@ -40,6 +40,8 @@ function addMetadata() {
     console.log(fileData); //For testing purposes
 
     listeningQueue.push(fileData);
+    //addToLQueue(fileData);
+
     //Send audio to playback source
     //if (document.getElementById("audioPlayback").src.endsWith("Assets/tempBlankAudio.mp3")) {
         document.getElementById("audioPlayback").src = fileData[0];
@@ -97,6 +99,28 @@ function clearForm() {
         }
     }
     contractForm();
+}
+
+function addToLQueue(fmetadata) {
+    //TODO year nan displaying, length is previous song for some reason
+    var table = document.getElementById("lqueueTable").getElementsByTagName("tbody")[0];
+    var newRow = table.insertRow(table.rows.length);
+    var cell1 = newRow.insertCell(0);
+    var cell2 = newRow.insertCell(1);
+    var cell3 = newRow.insertCell(2);
+    var cell4 = newRow.insertCell(3);
+
+    cell1.innerHTML += fmetadata[1] + '<span class="artistLbl"> ' + fmetadata[2] + '</span>'; //Title Artist
+    cell2.innerHTML = fmetadata[3]; //Album
+    if (fmetadata[5] != NaN) {
+        cell3.innerHTML = fmetadata[5]; //Year
+    }
+    var m = Math.floor(fmetadata[12] / 60);
+    var s = fmetadata[12] % 60;
+    if (s < 10) {
+        s = "0" + s;
+    }
+    cell4.innerHTML = m + ":" + s; //Length (m:ss)
 }
 
 function hSettingsMenu() {
