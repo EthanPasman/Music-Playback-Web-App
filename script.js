@@ -40,7 +40,8 @@ function addMetadata() {
     console.log(fileData); //For testing purposes
 
     listeningQueue.push(fileData);
-    //addToLQueue(fileData);
+    document.getElementById("playlistName").innerHTML = "Listening Queue";
+    addToLQueue(fileData);
 
     //Send audio to playback source
     //if (document.getElementById("audioPlayback").src.endsWith("Assets/tempBlankAudio.mp3")) {
@@ -102,7 +103,8 @@ function clearForm() {
 }
 
 function addToLQueue(fmetadata) {
-    //TODO year nan displaying, length is previous song for some reason
+    //TODO limit length of input, better styling, expand row for more metadata
+    var audio = document.getElementById("audio");
     var table = document.getElementById("lqueueTable").getElementsByTagName("tbody")[0];
     var newRow = table.insertRow(table.rows.length);
     var cell1 = newRow.insertCell(0);
@@ -112,15 +114,20 @@ function addToLQueue(fmetadata) {
 
     cell1.innerHTML += fmetadata[1] + '<span class="artistLbl"> ' + fmetadata[2] + '</span>'; //Title Artist
     cell2.innerHTML = fmetadata[3]; //Album
-    if (fmetadata[5] != NaN) {
+    if ("" + fmetadata[5] !== "NaN") /* Compare with string NaN */ {
         cell3.innerHTML = fmetadata[5]; //Year
     }
-    var m = Math.floor(fmetadata[12] / 60);
-    var s = fmetadata[12] % 60;
-    if (s < 10) {
-        s = "0" + s;
+
+    //Get length on audio load
+    audio.onloadedmetadata = function () {
+        var d = Math.round(audio.duration);
+        var m = Math.floor(d / 60);
+        var s = d % 60;
+        if (s < 10) {
+            s = "0" + s;
+        }
+        cell4.innerHTML = m + ":" + s; //Length (m:ss)
     }
-    cell4.innerHTML = m + ":" + s; //Length (m:ss)
 }
 
 function hSettingsMenu() {

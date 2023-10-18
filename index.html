@@ -30,13 +30,15 @@
         <audio id="audio" controls preload="metadata">
             <source src="Assets/tempBlankAudio.mp3" id="audioPlayback">
         </audio>
-        <div id="lqueue">
-            <table id="lqueueTable">
-                <tbody>
-                    <!--Listening queue-->
-                </tbody>
-            </table>
-        </div>
+    </div>
+
+    <div id="lqueue">
+        <h1 id="playlistName">Upload a song to start listening!</h1>
+        <table id="lqueueTable">
+            <tbody>
+                <!--Listening queue-->
+            </tbody>
+        </table>
     </div>
 
     <div id="upload">
@@ -65,7 +67,7 @@
                     <input type="text" pattern="\d*" id="year" title="Please enter a positive integer number."><br>
                     <label>Beats-per-minute</label>
                     <input type="text" pattern="[0-9]*\.?[0-9]*" id="bpm" title="Please enter a positive number."><br>
-                    
+
                     <label>Genre(s)</label>
                     <input list="genreOptions" id="genre">
                     <datalist id="genreOptions">
@@ -98,7 +100,7 @@
                     </datalist>
                     <input type="button" onclick="addGenre()" value="Add"><br>
                     <div id="genreList"></div><br>
-                    
+
                     <label>Rating </label><label id="rating"></label><br>
                     <div class="ratingscale">
                         <input type="radio" id="star10" value="10">
@@ -122,10 +124,10 @@
                         <input type="radio" id="star1" value="1">
                         <label for="star1">★</label>
                     </div>
-                    
+
                     <label>Comments</label><br>
                     <textarea rows="3" id="comments"></textarea><br>
-                    
+
                     <label>Tags</label>
                     <input list="tagOptions" id="tag">
                     <datalist id="tagOptions">
@@ -144,7 +146,7 @@
                     </datalist>
                     <input type="button" onclick="addTag()" value="Add"><br>
                     <div id="tagList"></div><br>
-                    
+
                     <input type="hidden" id="listens" value="0">
                     <input type="hidden" id="fullListens" value="0">
                     <input type="hidden" id="likeStatus" value="neutral">
