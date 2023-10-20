@@ -55,6 +55,12 @@ h1 {
     width: 100%;
 }
 
+#displayFileData {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 #unsupportedFileType {
     color: #ff6961;
     font-size: 14px;
@@ -179,24 +185,46 @@ input:invalid {
 
 table {
     width: 100%;
-    background-color: #131116;
+    background-color: #0d021f;
     border-radius: 10px;
+    border-collapse: collapse;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 1);
+}
+
+tr {
+    border-bottom: 1px solid slategrey;
+}
+
+tr:last-child {
+    border-bottom: none;
+}
+
+td {
+    height: 30px;
+    padding: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 td:nth-child(1) {
     width: 300px;
+    max-width: 300px;
 }
 
 td:nth-child(2) {
     width: 200px;
+    max-width: 200px;
 }
 
 td:nth-child(3) {
     width: 50px;
+    max-width: 50px;
 }
 
 td:nth-child(4) {
     width: 50px;
+    max-width: 50px;
 }
 
 .artistLbl {

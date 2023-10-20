@@ -103,7 +103,7 @@ function clearForm() {
 }
 
 function addToLQueue(fmetadata) {
-    //TODO limit length of input, better styling, expand row for more metadata
+    //TODO expand row for more metadata
     var audio = document.getElementById("audio");
     var table = document.getElementById("lqueueTable").getElementsByTagName("tbody")[0];
     var newRow = table.insertRow(table.rows.length);
@@ -113,6 +113,7 @@ function addToLQueue(fmetadata) {
     var cell4 = newRow.insertCell(3);
 
     cell1.innerHTML += fmetadata[1] + '<span class="artistLbl"> ' + fmetadata[2] + '</span>'; //Title Artist
+
     cell2.innerHTML = fmetadata[3]; //Album
     if ("" + fmetadata[5] !== "NaN") /* Compare with string NaN */ {
         cell3.innerHTML = fmetadata[5]; //Year
