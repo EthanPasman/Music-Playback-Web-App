@@ -195,6 +195,10 @@ tr {
     border-bottom: 1px solid slategrey;
 }
 
+tr:hover {
+    background-color: #140330;
+}
+
 tr:last-child {
     border-bottom: none;
 }
