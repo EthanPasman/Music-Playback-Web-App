@@ -106,12 +106,19 @@ function addToLQueue(fmetadata) {
     var audio = document.getElementById("audio");
     var table = document.getElementById("lqueueTable").getElementsByTagName("tbody")[0];
     var newRow = table.insertRow(table.rows.length);
+    newRow.className = "trBasic";
     var cell1 = newRow.insertCell(0);
     var cell2 = newRow.insertCell(1);
     var cell3 = newRow.insertCell(2);
     var cell4 = newRow.insertCell(3);
 
-    cell1.innerHTML += fmetadata[1] + '<span class="artistLbl" title="Contributing artists: ' + fmetadata[4] + '"> ' + fmetadata[2] + '</span>'; //Title Artist (Contributors)
+    //Title Artist (Contributors)
+    if (fmetadata[4] != "") {
+        cell1.innerHTML += fmetadata[1] + '<span class="artistLbl" title="Contributing artists: ' + fmetadata[4] + '"> ' + fmetadata[2] + '</span>';
+    } else {
+        cell1.innerHTML += fmetadata[1] + '<span class="artistLbl"> ' + fmetadata[2] + '</span>';
+    }
+
     cell2.innerHTML = fmetadata[3]; //Album
     if ("" + fmetadata[5] !== "NaN") /* Compare with string NaN */ {
         cell3.innerHTML = fmetadata[5]; //Year
@@ -128,25 +135,25 @@ function addToLQueue(fmetadata) {
         cell4.innerHTML = m + ":" + s; //Length (m:ss)
     }
 
-    /*
-    //Expanded row for more metadata
-    var expNewRow = table.insertRow(table.rows.length);
-    var eCell1 = expNewRow.insertCell(0);
-    var eCell2 = expNewRow.insertCell(1);
-    var eCell3 = expNewRow.insertCell(2);
+    if (fmetadata[7].length != 0 || fmetadata[10].length != 0 || "" + fmetadata[6] !== "NaN") {
+        //Expanded row for more metadata
+        var expNewRow = table.insertRow(table.rows.length);
+        var eCell1 = expNewRow.insertCell(0);
+        var eCell2 = expNewRow.insertCell(1);
+        var eCell3 = expNewRow.insertCell(2);
 
-    eCell1.innerHTML = fmetadata[7]; //Genres
-    eCell2.innerHTML = fmetadata[10]; //Tags
-    eCell3.colSpan = 2;
-    if ("" + fmetadata[6] !== "NaN") {
-        eCell3.innerHTML = fmetadata[6] + "BPM";
+        eCell1.innerHTML = fmetadata[7].join(", "); //Genres
+        eCell2.innerHTML = fmetadata[10].join(", "); //Tags
+        eCell3.colSpan = 2;
+        if ("" + fmetadata[6] !== "NaN") {
+            eCell3.innerHTML = fmetadata[6] + "BPM";
+        }
+
+        expNewRow.style.visibility = "collapse";
+        newRow.addEventListener("click", () => {
+            expNewRow.style.visibility = expNewRow.style.visibility === "collapse" ? "visible" : "collapse";
+        }); //Alternate visibility of expanded row on click
     }
-
-    expNewRow.style.display = "none";
-    newRow.addEventListener("click", () => {
-        expNewRow.style.display == "none" ? expNewRow.style.display = "initial" : expNewRow.style.display = "none";
-    }); //Alternate visibility of expanded row on click
-    */
 }
 
 function hSettingsMenu() {
