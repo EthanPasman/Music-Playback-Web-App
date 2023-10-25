@@ -197,6 +197,7 @@ table {
 
 tr:hover {
     background-color: #140330;
+    cursor: pointer;
 }
 
 tr:first-child {

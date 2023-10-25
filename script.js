@@ -37,14 +37,14 @@ function addMetadata() {
     fileData[16] = expandedForm.querySelector("#likeStatus").value;
     fileData[17] = expandedForm.querySelector("#shuffleWeight").value;
 
-    console.log(fileData); //For testing purposes
+    //console.log(fileData); //For testing purposes
 
-    listeningQueue.push(fileData);
+    listeningQueue.push([].concat(fileData)); //Add copy of fileData to lqueue for current songs data
     document.getElementById("playlistName").innerHTML = "Listening Queue";
     addToLQueue(fileData);
 
     //Send audio to playback source
-    //if (document.getElementById("audioPlayback").src.endsWith("Assets/tempBlankAudio.mp3")) {
+    if (document.getElementById("audioPlayback").src.endsWith("Assets/tempBlankAudio.mp3")) {
         document.getElementById("audioPlayback").src = fileData[0];
         document.getElementById("audio").load();
         flFlag = true;
@@ -54,8 +54,8 @@ function addMetadata() {
         } else {
             document.getElementById("displayFileData").innerHTML = fileData[1]; //Title
         }
-        playHistory.push(fileData);
-    //}
+        playHistory.push([].concat(fileData)); //Add copy of fileData to playHistory for current songs data
+    }
     clearForm();
     document.getElementById("metadataForm").style.display = "none";
 }
@@ -103,7 +103,6 @@ function clearForm() {
 }
 
 function addToLQueue(fmetadata) {
-    var audio = document.getElementById("audio");
     var table = document.getElementById("lqueueTable").getElementsByTagName("tbody")[0];
     var newRow = table.insertRow(table.rows.length);
     newRow.className = "trBasic";
@@ -111,6 +110,7 @@ function addToLQueue(fmetadata) {
     var cell2 = newRow.insertCell(1);
     var cell3 = newRow.insertCell(2);
     var cell4 = newRow.insertCell(3);
+    var url = fmetadata[0];
 
     //Title Artist (Contributors)
     if (fmetadata[4] != "") {
@@ -123,17 +123,14 @@ function addToLQueue(fmetadata) {
     if ("" + fmetadata[5] !== "NaN") /* Compare with string NaN */ {
         cell3.innerHTML = fmetadata[5]; //Year
     }
-
-    //Get length on audio load
-    audio.onloadedmetadata = function () {
-        var d = Math.round(audio.duration);
-        var m = Math.floor(d / 60);
-        var s = d % 60;
-        if (s < 10) {
-            s = "0" + s;
-        }
-        cell4.innerHTML = m + ":" + s; //Length (m:ss)
+    
+    var d = Math.round(fmetadata[12]);
+    var m = Math.floor(d / 60);
+    var s = d % 60;
+    if (s < 10) {
+        s = "0" + s;
     }
+    cell4.innerHTML = m + ":" + s; //Length (m:ss)
 
     if (fmetadata[7].length != 0 || fmetadata[10].length != 0 || "" + fmetadata[6] !== "NaN") {
         //Expanded row for more metadata
@@ -151,8 +148,20 @@ function addToLQueue(fmetadata) {
 
         expNewRow.style.visibility = "collapse";
         newRow.addEventListener("click", () => {
-            expNewRow.style.visibility = expNewRow.style.visibility === "collapse" ? "visible" : "collapse";
+            expNewRow.style.visibility = expNewRow.style.visibility == "collapse" ? "visible" : "collapse";
         }); //Alternate visibility of expanded row on click
+    }
+
+    newRow.addEventListener("dblclick", () => { changeSongOnDblClick(url); }); //Send url to change song function
+}
+
+function removeFromLQueue(rowIndex) {
+    var table = document.getElementById("lqueueTable");
+    if (table.rows[rowIndex]) {
+        if (table.rows[rowIndex + 1] && table.rows[rowIndex + 1].className != "trBasic") {
+            table.deleteRow(rowIndex + 1);
+        }
+        table.deleteRow(rowIndex);
     }
 }
 
@@ -205,7 +214,7 @@ function popoutPlayback() {
 
     document.getElementById("settingsMenu").style.display = "none";
     document.getElementById("playback").style.display = "none"; //hide / unhide div on original page when popped out page is active / closed
-    newWindow.addEventListener("beforeunload", function () { document.getElementById("playback").style.display = "initial"; });
+    newWindow.addEventListener("beforeunload", () => { document.getElementById("playback").style.display = "initial"; });
 }
 
 function addGenre() {
@@ -276,17 +285,18 @@ function removeTag(tag) {
     tags = tags.filter(t => t != tag);
 }
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
     var fileInput = document.getElementById("fileInput");
     var audio = document.getElementById("audio");
     var unsupportedFileType = document.getElementById("unsupportedFileType");
     var metadataForm = document.getElementById("metadataForm");
     var rating = document.getElementById("rating");
     var expandedForm = document.getElementById("expandedForm");
+    var tempAudio = document.createElement("audio");
 
-    //Get audio duration from file upload on metadata load
-    audio.onloadedmetadata = function () {
-        var dur = audio.duration;
+    //Get audio duration from file upload on temp audio element metadata load
+    tempAudio.onloadedmetadata = function () {
+        var dur = tempAudio.duration;
         if (dur) {
             fileData[12] = Math.round(dur);
         }
@@ -331,6 +341,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 var objURL = URL.createObjectURL(selectedFile);
                 fileData[0] = objURL;
+                //URL sent to temp audio element so that file duration can be saved
+                //Without using the duration of the visible audio element, which is not guaranteed to be loaded to the correct song
+                tempAudio.src = objURL;
+                tempAudio.load();
 
                 metadataForm.style.display = "initial";
             } else {
@@ -350,8 +364,8 @@ function acPrev(playlist = playHistory) {
         audio.pause();
         document.getElementById("play-pause").value = "▶";
     }
-    //TODO return to start of previous song in playlist
-    /*var index = 0;
+    
+    var index = 0;
     index = playlist.findIndex(song => song[0] == document.getElementById("audioPlayback").src); //Find index of playlist where songs source url matches
 
     if (index < 0) {
@@ -372,7 +386,9 @@ function acPrev(playlist = playHistory) {
         }
         audio.load();
         flFlag = true;
-    }*/
+        audio.play();
+        document.getElementById("play-pause").value = "⏸";
+    }
 }
 
 function acRestart() {
@@ -437,7 +453,6 @@ function acSkip() {
     var audio = document.getElementById("audio");
     audio.currentTime = audio.duration;
     flFlag = false;
-    endSongListener();
 }
 
 //Event listener for end of song
@@ -447,8 +462,8 @@ function endSongListener() {
 }
 
 function nextSong(playlist = listeningQueue) {
-    //TODO advance to next song
-    /*var index = 0;
+    var audio = document.getElementById("audio");
+    var index = 0;
     index = playlist.findIndex(song => song[0] == document.getElementById("audioPlayback").src); //Find index of playlist where songs source url matches
 
     if (index < 0) {
@@ -462,9 +477,11 @@ function nextSong(playlist = listeningQueue) {
     }
 
     index++;
-    if (playlist.length >= index) {
+    if (playlist.length > index) {
+        //Remove from listening queue on listen
         if (playlist == listeningQueue) {
             listeningQueue.shift();
+            removeFromLQueue(0);
             index = 0;
         }
 
@@ -476,7 +493,35 @@ function nextSong(playlist = listeningQueue) {
             document.getElementById("displayFileData").innerHTML = playlist[index][1]; //Title
         }
         audio.load();
-        playHistory.push(playlist[index]);
+        playHistory.push([].concat(playlist[index]));
         flFlag = true;
-    }*/
+        audio.play();
+        document.getElementById("play-pause").value = "⏸";
+    }
+}
+
+function changeSongOnDblClick(url, playlist = listeningQueue) {
+    var audio = document.getElementById("audio");
+    var index = 0;
+    index = playlist.findIndex(song => song[0] == document.getElementById("audioPlayback").src); //Find index of playlist where songs source url matches
+
+    if (index >= 0) {
+        playlist[index][13]++; //Add listen to current song
+    }
+    
+    //Get song to change audio playback to
+    var song = playlist.find((s) => s[0] == url);
+    if (song !== undefined) {
+        document.getElementById("audioPlayback").src = url;
+        if (song[2].length > 0) {
+            document.getElementById("displayFileData").innerHTML = song[2] + " - " + song[1]; //Artist - title
+        } else {
+            document.getElementById("displayFileData").innerHTML = song[1]; //Title
+        }
+        audio.load();
+        playHistory.push([].concat(song));
+        flFlag = true;
+        audio.play();
+        document.getElementById("play-pause").value = "⏸";
+    }
 }
