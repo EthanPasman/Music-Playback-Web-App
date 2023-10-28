@@ -58,6 +58,7 @@ function addMetadata() {
     }
     clearForm();
     document.getElementById("metadataForm").style.display = "none";
+    document.getElementById("uploadInput").style.display = "initial";
 }
 
 function inputValidation() {
@@ -289,6 +290,7 @@ document.addEventListener("DOMContentLoaded", () => {
     var fileInput = document.getElementById("fileInput");
     var audio = document.getElementById("audio");
     var unsupportedFileType = document.getElementById("unsupportedFileType");
+    //var invalidLink = document.getElementById("invalidLink");
     var metadataForm = document.getElementById("metadataForm");
     var rating = document.getElementById("rating");
     var expandedForm = document.getElementById("expandedForm");
@@ -304,6 +306,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     //Default visibilty of elements on page load
     unsupportedFileType.style.display = "none";
+    //invalidLink.style.display = "none";
     metadataForm.style.display = "none";
     expandedForm.style.display = "none";
     document.getElementById("contract").style.display = "none";
@@ -347,13 +350,37 @@ document.addEventListener("DOMContentLoaded", () => {
                 tempAudio.load();
 
                 metadataForm.style.display = "initial";
+                document.getElementById("uploadInput").style.display = "none";
             } else {
                 unsupportedFileType.style.display = "initial";
             }
         }
     }
     fileInput.addEventListener("change", fileListener);
+    /*
+    function linkListener() {
+        invalidLink.style.display = "none";
+        var link = document.getElementById("ytLink").value;
 
+        if (link.length > 0) {
+            //Pattern for youtube links from @eyecatchUp on StackOverflow
+            const pattern = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
+            var match = link.match(pattern);
+            if (match) {
+                var vidId = match[1];
+                //TODO send vidId to iFrame with YT API
+
+                metadataForm.style.display = "initial";
+                document.getElementById("uploadInput").style.display = "none";
+            } else {
+                invalidLink.style.display = "initial";
+            }
+        } else {
+            invalidLink.style.display = "initial";
+        }
+    }
+    document.getElementById("linkBtn").addEventListener("click", linkListener);
+    */
     audio.addEventListener("ended", endSongListener);
 });
 

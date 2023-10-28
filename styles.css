@@ -61,7 +61,7 @@ h1 {
     text-overflow: ellipsis;
 }
 
-#unsupportedFileType {
+#unsupportedFileType, #invalidLink {
     color: #ff6961;
     font-size: 14px;
     margin-top: 10px;
