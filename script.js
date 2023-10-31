@@ -359,13 +359,6 @@ document.addEventListener("DOMContentLoaded", () => {
     audio.addEventListener("ended", endSongListener);
 });
 
-window.addEventListener("message", (event) => {
-    console.log("test");
-    if (event.origin == iFrameSrc && event.data) {
-        document.getElementById("audio").src = event.data;
-    }
-});
-
 function acPrev(playlist = playHistory) {
     var audio = document.getElementById("audio");
     audio.currentTime = 0;
