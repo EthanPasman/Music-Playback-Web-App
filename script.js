@@ -213,7 +213,7 @@ function popoutPlayback() {
         if (!oldAudio.paused) {
             //I would make newAudio autoplay for a more seamless user experience, but browsers block autoplay on new windows without user input
             oldAudio.pause();
-            document.getElementById("play-pause").value = "▶";
+            newWindow.document.getElementById("play-pause").value = "▶";
         }
     });
 
