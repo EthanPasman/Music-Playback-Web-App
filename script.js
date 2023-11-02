@@ -190,19 +190,10 @@ function contractForm() {
 function popoutPlayback() {
     var newWindow = window.open("", "_blank", "width=400, height=175, top=50");
     var customControls = document.getElementById("controls").innerHTML;
-    var displaymeta = "";
+    var src = document.getElementById("audioPlayback").src;
+    var displaymeta = document.getElementById("displayFileData").innerHTML;
     var head = '<!DOCTYPE html><html><head><title>Music App</title><link rel = "stylesheet" type = "text/css" href = "styles.css">' +
         '<script src="script.js"></script><meta charset="UTF-8"></head><body><div id="playback">';
-
-    var src = "Assets/tempBlankAudio.mp3";
-    if (fileData[0].length > 0) {
-        src = fileData[0];
-        if (fileData[2].length > 0) {
-            displaymeta = fileData[2] + " - " + fileData[1]; //Artist - title
-        } else {
-            displaymeta = fileData[1]; //Title
-        }
-    }
 
     //Write to new window
     newWindow.document.open();
@@ -213,9 +204,35 @@ function popoutPlayback() {
     newWindow.document.write('</div></body></html>');
     newWindow.document.close();
 
+    //Set currentTime and volume to same as before popped out, and autoplay if playing when popped out
+    newWindow.addEventListener("load", () => {
+        var newAudio = newWindow.document.getElementById("audio");
+        var oldAudio = document.getElementById("audio");
+        newAudio.currentTime = oldAudio.currentTime;
+        newAudio.volume = oldAudio.volume;
+        if (!oldAudio.paused) {
+            //I would make newAudio autoplay for a more seamless user experience, but browsers block autoplay on new windows without user input
+            oldAudio.pause();
+            document.getElementById("play-pause").value = "▶";
+        }
+    });
+
+    //TODO Allow custom control buttons to change audio src in new window
+
     document.getElementById("settingsMenu").style.display = "none";
     document.getElementById("playback").style.display = "none"; //hide / unhide div on original page when popped out page is active / closed
-    newWindow.addEventListener("beforeunload", () => { document.getElementById("playback").style.display = "initial"; });
+    newWindow.addEventListener("beforeunload", () => {
+        document.getElementById("playback").style.display = "initial";
+        var newAudio = newWindow.document.getElementById("audio");
+        var oldAudio = document.getElementById("audio");
+        oldAudio.currentTime = newAudio.currentTime;
+        oldAudio.volume = newAudio.volume;
+        if (!newAudio.paused) {
+            oldAudio.play();
+            document.getElementById("play-pause").value = "⏸";
+            newAudio.pause();
+        }
+    });
 }
 
 function addGenre() {
