@@ -198,9 +198,10 @@ function popoutPlayback() {
     //Write to new window
     newWindow.document.open();
     newWindow.document.write(head);
-    newWindow.document.write('<p>' + displaymeta + '</p>');
+    newWindow.document.write('<p id="displayFileData">' + displaymeta + '</p>');
     newWindow.document.write('<div id="controls">' + customControls + '</div>');
     newWindow.document.write('<audio id="audio" controls preload="metadata"><source src = "' + src + '" id = "audioPlayback"></audio>');
+    newWindow.document.write('<p id="lQueuePopout" hidden>' + listeningQueue.join("ENDOFSONG") + '</p><p id="pHistoryPopout" hidden>' + playHistory.join("ENDOFSONG") + '</p>');
     newWindow.document.write('</div></body></html>');
     newWindow.document.close();
 
@@ -216,8 +217,6 @@ function popoutPlayback() {
             newWindow.document.getElementById("play-pause").value = "▶";
         }
     });
-
-    //TODO Allow custom control buttons to change audio src in new window
 
     document.getElementById("settingsMenu").style.display = "none";
     document.getElementById("playback").style.display = "none"; //hide / unhide div on original page when popped out page is active / closed
@@ -305,11 +304,8 @@ function removeTag(tag) {
 
 document.addEventListener("DOMContentLoaded", () => {
     var fileInput = document.getElementById("fileInput");
-    var audio = document.getElementById("audio");
     var unsupportedFileType = document.getElementById("unsupportedFileType");
-    var metadataForm = document.getElementById("metadataForm");
     var rating = document.getElementById("rating");
-    var expandedForm = document.getElementById("expandedForm");
     var tempAudio = document.createElement("audio");
 
     //Get audio duration from file upload on temp audio element metadata load
@@ -319,12 +315,6 @@ document.addEventListener("DOMContentLoaded", () => {
             fileData[12] = Math.round(dur);
         }
     }
-
-    //Default visibilty of elements on page load
-    unsupportedFileType.style.display = "none";
-    metadataForm.style.display = "none";
-    expandedForm.style.display = "none";
-    document.getElementById("contract").style.display = "none";
 
     //Update radiobuttons upon selection
     var radioButtons = document.querySelectorAll('input[type="radio"]');
@@ -337,7 +327,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
             //Update rating label
             rating.textContent = radioButton.value;
-            expandedForm.querySelector("#shuffleWeight").value = rating.textContent / 10;
+            document.getElementById("expandedForm").querySelector("#shuffleWeight").value = rating.textContent / 10;
         });
     });
 
@@ -364,19 +354,27 @@ document.addEventListener("DOMContentLoaded", () => {
                 tempAudio.src = objURL;
                 tempAudio.load();
 
-                metadataForm.style.display = "initial";
+                document.getElementById("metadataForm").style.display = "initial";
                 document.getElementById("uploadInput").style.display = "none";
             } else {
                 unsupportedFileType.style.display = "initial";
             }
         }
     }
-    fileInput.addEventListener("change", fileListener);
+    if (fileInput !== null) {
+        fileInput.addEventListener("change", fileListener);
+    }
     
-    audio.addEventListener("ended", endSongListener);
+    document.getElementById("audio").addEventListener("ended", endSongListener);
 });
 
 function acPrev(playlist = playHistory) {
+    //Check if function was called from a popped-out window or the original window
+    if (playlist.length == 0 && document.getElementById("pHistoryPopout") !== null) {
+        //If from popped-out window, re-populate playHistory
+        playlist = document.getElementById("pHistoryPopout").innerHTML.split("ENDOFSONG").map((s) => s.split(','));
+    }
+
     var audio = document.getElementById("audio");
     audio.currentTime = 0;
     if (audio.paused == false) {
@@ -481,6 +479,12 @@ function endSongListener() {
 }
 
 function nextSong(playlist = listeningQueue) {
+    //Check if function was called from a popped-out window or the original window
+    if (playlist.length == 0 && document.getElementById("lQueuePopout") !== null) {
+        //If from popped-out window, re-populate listeningQueue
+        playlist = document.getElementById("lQueuePopout").innerHTML.split("ENDOFSONG").map((s) => s.split(','));
+    }
+
     var audio = document.getElementById("audio");
     var index = 0;
     index = playlist.findIndex(song => song[0] == document.getElementById("audioPlayback").src); //Find index of playlist where songs source url matches

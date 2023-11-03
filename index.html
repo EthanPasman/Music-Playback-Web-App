@@ -45,10 +45,10 @@
         <div id="uploadInput">
             <h1>Upload file</h1>
             <input type="file" accept=".mp3, .wav, .ogg" id="fileInput"><br>
-            <p id="unsupportedFileType">File type not supported. Supported extentions: .mp3, .wav, .ogg</p><br>
+            <p id="unsupportedFileType" hidden>File type not supported. Supported extentions: .mp3, .wav, .ogg</p><br>
         </div>
 
-        <div id="metadataForm">
+        <div id="metadataForm" hidden>
             <h3>Metadata</h3>
             <form>
 
@@ -60,8 +60,8 @@
                 <input type="text" id="album"><br>
 
                 <input type="button" onclick="extendForm()" value="More metadata" class="hyperlinkButton" id="extend">
-                <input type="button" onclick="contractForm()" value="Less metadata" class="hyperlinkButton" id="contract"><br>
-                <br><div id="expandedForm">
+                <input type="button" onclick="contractForm()" value="Less metadata" class="hyperlinkButton" id="contract" hidden><br>
+                <br><div id="expandedForm" hidden>
 
                     <label>Contributors</label>
                     <input type="text" id="contrArtists"><br>
