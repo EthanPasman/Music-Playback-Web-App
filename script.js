@@ -220,6 +220,7 @@ function popoutPlayback() {
 
     document.getElementById("settingsMenu").style.display = "none";
     document.getElementById("playback").style.display = "none"; //hide / unhide div on original page when popped out page is active / closed
+
     newWindow.addEventListener("beforeunload", () => {
         document.getElementById("playback").style.display = "initial";
         var newAudio = newWindow.document.getElementById("audio");
@@ -493,6 +494,9 @@ function nextSong(playlist = listeningQueue) {
         return;
     }
 
+    if (playHistory.length == 0) {
+        playHistory.push([].concat(playlist[index]));
+    }
     //Add a listen and full listen is flag is true
     playlist[index][13]++;
     if (flFlag) {
@@ -524,6 +528,10 @@ function nextSong(playlist = listeningQueue) {
 }
 
 function changeSongOnDblClick(url, playlist = listeningQueue) {
+    //Check if audio playback is in popped-out window, if so don't update hidden audio in original page
+    if (document.getElementById("playback").style.display == "none") {
+        return;
+    }
     var audio = document.getElementById("audio");
     var index = 0;
     index = playlist.findIndex(song => song[0] == document.getElementById("audioPlayback").src); //Find index of playlist where songs source url matches
