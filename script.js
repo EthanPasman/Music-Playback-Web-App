@@ -117,12 +117,15 @@ function addToLQueue(fmetadata) {
     if (fmetadata[4] != "") {
         cell1.innerHTML += fmetadata[1] + '<span class="artistLbl" title="Contributing artists: ' + fmetadata[4] + '"> ' + fmetadata[2] + '</span>';
     } else {
-        cell1.innerHTML += fmetadata[1] + '<span class="artistLbl"> ' + fmetadata[2] + '</span>';
+        cell1.innerHTML += fmetadata[1] + '<span class="artistLbl" title="Artist"> ' + fmetadata[2] + '</span>';
     }
+    cell1.title = "Title";
 
     cell2.innerHTML = fmetadata[3]; //Album
+    cell2.title = "Album";
     if ("" + fmetadata[5] !== "NaN") /* Compare with string NaN */ {
         cell3.innerHTML = fmetadata[5]; //Year
+        cell3.title = "Year";
     }
     
     var d = Math.round(fmetadata[12]);
@@ -132,6 +135,7 @@ function addToLQueue(fmetadata) {
         s = "0" + s;
     }
     cell4.innerHTML = m + ":" + s; //Length (m:ss)
+    cell4.title = "Length";
 
     if (fmetadata[7].length != 0 || fmetadata[10].length != 0 || "" + fmetadata[6] !== "NaN") {
         //Expanded row for more metadata
@@ -141,16 +145,34 @@ function addToLQueue(fmetadata) {
         var eCell3 = expNewRow.insertCell(2);
 
         eCell1.innerHTML = fmetadata[7].join(", "); //Genres
+        eCell1.title = "Genre(s)";
         eCell2.innerHTML = fmetadata[10].join(", "); //Tags
+        eCell2.title = "Tags";
         eCell3.colSpan = 2;
         if ("" + fmetadata[6] !== "NaN") {
-            eCell3.innerHTML = fmetadata[6] + "BPM";
+            eCell3.innerHTML = fmetadata[6] + "BPM"; //Beats-per-minute
+            eCell3.title = "Beats-per-minute";
         }
 
         expNewRow.style.visibility = "collapse";
+        expNewRow.addEventListener("dblclick", () => { changeSongOnDblClick(url); });
         newRow.addEventListener("click", () => {
             expNewRow.style.visibility = expNewRow.style.visibility == "collapse" ? "visible" : "collapse";
         }); //Alternate visibility of expanded row on click
+    }
+    if (fmetadata[9].length != 0) {
+        var expNewRow2 = table.insertRow(table.rows.length);
+        var e2Cell1 = expNewRow2.insertCell(0);
+
+        e2Cell1.colSpan = 4;
+        e2Cell1.innerHTML = fmetadata[9]; //Comments
+        e2Cell1.title = "User Comments";
+
+        expNewRow2.style.visibility = "collapse";
+        expNewRow2.addEventListener("dblclick", () => { changeSongOnDblClick(url); });
+        newRow.addEventListener("click", () => {
+            expNewRow2.style.visibility = expNewRow2.style.visibility == "collapse" ? "visible" : "collapse";
+        });
     }
 
     newRow.addEventListener("dblclick", () => { changeSongOnDblClick(url); }); //Send url to change song function
@@ -160,6 +182,9 @@ function removeFromLQueue(rowIndex) {
     var table = document.getElementById("lqueueTable");
     if (table.rows[rowIndex]) {
         if (table.rows[rowIndex + 1] && table.rows[rowIndex + 1].className != "trBasic") {
+            if (table.rows[rowIndex + 2] && table.rows[rowIndex + 2].className != "trBasic") {
+                table.deleteRow(rowIndex + 2);
+            }
             table.deleteRow(rowIndex + 1);
         }
         table.deleteRow(rowIndex);
