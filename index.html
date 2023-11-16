@@ -11,7 +11,8 @@
     <div id="settings">
         <input type="button" id="hamburgerBtn" value="☰" onclick="hSettingsMenu()">
         <div class="hMenu" id="settingsMenu">
-            <input type="button" onclick="popoutPlayback()" value="Pop-out Audio" class="hyperlinkButton" id="popout">
+            <input type="button" onclick="popoutPlayback()" value="Pop-out Audio" class="hyperlinkButton" id="popout"><br>
+            <input type="button" onclick="viewPlayHistory()" value="View Play History" class="hyperlinkButton" id="viewHistory">
         </div>
     </div>
 
@@ -37,6 +38,11 @@
         <table id="lqueueTable">
             <tbody>
                 <!--Listening queue-->
+            </tbody>
+        </table>
+        <table id="playHistoryTable" style="display: none;">
+            <tbody>
+                <!--Play history-->
             </tbody>
         </table>
     </div>

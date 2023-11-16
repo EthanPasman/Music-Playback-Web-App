@@ -41,7 +41,7 @@ function addMetadata() {
 
     listeningQueue.push([].concat(fileData)); //Add copy of fileData to lqueue for current songs data
     document.getElementById("playlistName").innerHTML = "Listening Queue";
-    addToLQueue(fileData);
+    addToTable(fileData);
 
     //Send audio to playback source
     if (document.getElementById("audioPlayback").src.endsWith("Assets/tempBlankAudio.mp3")) {
@@ -54,7 +54,8 @@ function addMetadata() {
         } else {
             document.getElementById("displayFileData").innerHTML = fileData[1]; //Title
         }
-        playHistory.push([].concat(fileData)); //Add copy of fileData to playHistory for current songs data
+        //playHistory.push([].concat(fileData)); //Add copy of fileData to playHistory for current songs data
+        //addToTable(fileData, "playHistoryTable");
     }
     clearForm();
     document.getElementById("metadataForm").style.display = "none";
@@ -103,8 +104,8 @@ function clearForm() {
     contractForm();
 }
 
-function addToLQueue(fmetadata) {
-    var table = document.getElementById("lqueueTable").getElementsByTagName("tbody")[0];
+function addToTable(fmetadata, tblName = "lqueueTable") {
+    var table = document.getElementById(tblName).getElementsByTagName("tbody")[0];
     var newRow = table.insertRow(table.rows.length);
     newRow.className = "trBasic";
     var cell1 = newRow.insertCell(0);
@@ -178,8 +179,8 @@ function addToLQueue(fmetadata) {
     newRow.addEventListener("dblclick", () => { changeSongOnDblClick(url); }); //Send url to change song function
 }
 
-function removeFromLQueue(rowIndex) {
-    var table = document.getElementById("lqueueTable");
+function removeFromTable(rowIndex, tblName = "lqueueTable") {
+    var table = document.getElementById(tblName);
     if (table.rows[rowIndex]) {
         if (table.rows[rowIndex + 1] && table.rows[rowIndex + 1].className != "trBasic") {
             if (table.rows[rowIndex + 2] && table.rows[rowIndex + 2].className != "trBasic") {
@@ -258,6 +259,36 @@ function popoutPlayback() {
             newAudio.pause();
         }
     });
+}
+
+function viewPlayHistory() {
+    var lqueueTable = document.getElementById("lqueueTable");
+    var playHistoryTable = document.getElementById("playHistoryTable");
+    var viewHistory = document.getElementById("viewHistory");
+    var playlistName = document.getElementById("playlistName");
+
+    if (playHistoryTable.style.display == "none") {
+        //Change visible table to play history
+        lqueueTable.style.display = "none";
+        playHistoryTable.style.display = "table";
+        viewHistory.value = "View Listening Queue";
+        if (playHistory.length > 0) {
+            playlistName.innerHTML = "Play History";
+        } else {
+            playlistName.innerHTML = "Start listening to begin your history!";
+        }
+
+    } else {
+        //Change visible table to listening queue (default)
+        lqueueTable.style.display = "table";
+        playHistoryTable.style.display = "none";
+        viewHistory.value = "View Play History";
+        if (listeningQueue.length > 0) {
+            playlistName.innerHTML = "Listening Queue";
+        } else {
+            playlistName.innerHTML = "Upload a song to start listening!";
+        }
+    }
 }
 
 function addGenre() {
@@ -521,6 +552,7 @@ function nextSong(playlist = listeningQueue) {
 
     if (playHistory.length == 0) {
         playHistory.push([].concat(playlist[index]));
+        addToTable(playlist[index], "playHistoryTable");
     }
     //Add a listen and full listen is flag is true
     playlist[index][13]++;
@@ -533,7 +565,7 @@ function nextSong(playlist = listeningQueue) {
         //Remove from listening queue on listen
         if (playlist == listeningQueue) {
             listeningQueue.shift();
-            removeFromLQueue(0);
+            removeFromTable(0);
             index = 0;
         }
 
@@ -546,6 +578,7 @@ function nextSong(playlist = listeningQueue) {
         }
         audio.load();
         playHistory.push([].concat(playlist[index]));
+        addToTable(playlist[index], "playHistoryTable");
         flFlag = true;
         audio.play();
         document.getElementById("play-pause").value = "⏸";
@@ -576,6 +609,7 @@ function changeSongOnDblClick(url, playlist = listeningQueue) {
         }
         audio.load();
         playHistory.push([].concat(song));
+        addToTable(song, "playHistoryTable");
         flFlag = true;
         audio.play();
         document.getElementById("play-pause").value = "⏸";
