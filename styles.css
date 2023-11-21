@@ -25,6 +25,8 @@ body {
 
 #lqueue {
     width: 630px;
+    max-height: 80%;
+    overflow-y: auto;
 }
 
 #hamburgerBtn {
