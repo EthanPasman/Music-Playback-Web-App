@@ -24,7 +24,7 @@ function addMetadata() {
     fileData[5] = Number(expandedForm.querySelector("#year").value);
     fileData[6] = Number(expandedForm.querySelector("#bpm").value);
     fileData[7] = genres;
-    fileData[8] = expandedForm.querySelector("#rating").textContent;
+    //fileData[8] = document.getElementById("#rating").textContent;
     fileData[9] = expandedForm.querySelector("#comments").value;
     fileData[10] = tags;
     fileData[11] = time;
@@ -55,6 +55,8 @@ function addMetadata() {
     clearForm();
     document.getElementById("metadataForm").style.display = "none";
     document.getElementById("uploadInput").style.display = "initial";
+    document.getElementsByClassName("ratingscale")[0].style.display = "flex";
+    document.getElementById("rtlbl").textContent = "Rating: ";
 }
 
 function inputValidation() {
@@ -73,7 +75,6 @@ function inputValidation() {
 
 function clearForm() {
     //Manual form clear, resets all inputs and their values, as well as changed labels from input
-    document.getElementById("rating").textContent = "";
     document.getElementById("comments").value = "";
     //Clear lists of genres and tags
     document.getElementById("genreList").replaceChildren();
@@ -88,9 +89,6 @@ function clearForm() {
             case "text":
             case "number":
                 formElements[i].value = "";
-                break;
-            case "radio":
-                formElements[i].checked = false;
                 break;
         }
     }
@@ -153,6 +151,8 @@ function addToTable(fmetadata, tblName = "lqueueTable") {
         newRow.addEventListener("click", () => {
             expNewRow.style.visibility = expNewRow.style.visibility == "collapse" ? "visible" : "collapse";
         }); //Alternate visibility of expanded row on click
+        //NOTE: There is a visual bug where the lqueue div becomes scrollable on any row having its visibility set to collapse.
+        //I have checked this in multiple browsers (FireFox version 120.0.1 & Chrome version 119.0.6045.200), this bug occurs on FireFox but not Chrome.
     }
     if (fmetadata[9].length != 0) {
         var expNewRow2 = table.insertRow(table.rows.length);
@@ -377,9 +377,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    //Update radiobuttons upon selection
-    var radioButtons = document.querySelectorAll('input[type="radio"]');
+    var radioButtons = document.getElementsByClassName("ratingscale")[0].querySelectorAll('input[type="radio"]');
     radioButtons.forEach((radioButton) => {
+        //On page reload, uncheck all radiobuttons
+        radioButton.checked = false;
+
+        //Update radiobuttons upon selection
         radioButton.addEventListener('change', () => {
             radioButtons.forEach((rb) => {
                 if (rb !== radioButton) {
@@ -388,6 +391,14 @@ document.addEventListener("DOMContentLoaded", () => {
             });
             //Update rating label
             rating.textContent = radioButton.value;
+
+            //Update rating metadata based on song playing from playhistory or listeningqueue
+            var songSrc = document.getElementById("audioPlayback").src;
+            if (document.getElementById("playHistoryTable").style.display == "none") {
+                listeningQueue.find((song) => { if (song[0] == songSrc) { song[8] = radioButton.value; } });
+            } else {
+                playHistory.find((song) => { if (song[0] == songSrc) { song[8] = radioButton.value; } });
+            }
         });
     });
 
@@ -462,6 +473,7 @@ function acPrev(playlist = playHistory) {
             document.getElementById("displayFileData").innerHTML = playlist[index][1]; //Title
         }
         audio.load();
+        updateRating(playlist[index][8]);
         flFlag = true;
         audio.play();
         document.getElementById("play-pause").value = "⏸";
@@ -580,6 +592,7 @@ function nextSong(playlist = listeningQueue) {
             document.getElementById("displayFileData").innerHTML = playlist[index][1]; //Title
         }
         audio.load();
+        updateRating(playlist[index][8]);
         playHistory.push([].concat(playlist[index]));
         addToTable(playlist[index], "playHistoryTable");
         flFlag = true;
@@ -589,6 +602,7 @@ function nextSong(playlist = listeningQueue) {
 }
 
 function changeSongOnDblClick(url, playlist = listeningQueue) {
+    //TODO fix bug from playHistory, dblclick doesnt change song unless its also in listeningqueue
     //Check if audio playback is in popped-out window, if so don't update hidden audio in original page
     if (document.getElementById("playback").style.display == "none") {
         return;
@@ -611,10 +625,24 @@ function changeSongOnDblClick(url, playlist = listeningQueue) {
             document.getElementById("displayFileData").innerHTML = song[1]; //Title
         }
         audio.load();
+        updateRating(song[8]);
         playHistory.push([].concat(song));
         addToTable(song, "playHistoryTable");
         flFlag = true;
         audio.play();
         document.getElementById("play-pause").value = "⏸";
+    }
+}
+
+function updateRating(val) {
+    //Clear current ratingscale
+    document.getElementById("rating").textContent = "";
+    var ratingBtns = document.getElementsByClassName("ratingscale")[0].querySelectorAll('input[type="radio"]');
+    ratingBtns.forEach((rb) => { rb.checked = false; });
+
+    //Change rating value to rating of song selected (val)
+    if (val != 0) {
+        document.getElementById("rating").textContent = val;
+        ratingBtns.forEach((rb) => { if (rb.value == val) { rb.checked = true; } });
     }
 }

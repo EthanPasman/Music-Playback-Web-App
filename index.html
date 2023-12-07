@@ -31,6 +31,30 @@
         <audio id="audio" controls preload="metadata">
             <source src="Assets/tempBlankAudio.mp3" id="audioPlayback">
         </audio>
+
+        <label id="rtlbl"></label><label id="rating"></label><br>
+        <div class="ratingscale" style="display: none;">
+            <input type="radio" id="star10" value="10">
+            <label for="star10">★</label>
+            <input type="radio" id="star9" value="9">
+            <label for="star9">★</label>
+            <input type="radio" id="star8" value="8">
+            <label for="star8">★</label>
+            <input type="radio" id="star7" value="7">
+            <label for="star7">★</label>
+            <input type="radio" id="star6" value="6">
+            <label for="star6">★</label>
+            <input type="radio" id="star5" value="5">
+            <label for="star5">★</label>
+            <input type="radio" id="star4" value="4">
+            <label for="star4">★</label>
+            <input type="radio" id="star3" value="3">
+            <label for="star3">★</label>
+            <input type="radio" id="star2" value="2">
+            <label for="star2">★</label>
+            <input type="radio" id="star1" value="1">
+            <label for="star1">★</label>
+        </div>
     </div>
 
     <div id="lqueue">
@@ -110,29 +134,7 @@
                     <input type="button" onclick="addGenre()" value="Add"><br>
                     <div id="genreList"></div><br>
 
-                    <label>Rating </label><label id="rating"></label><br>
-                    <div class="ratingscale">
-                        <input type="radio" id="star10" value="10">
-                        <label for="star10">★</label>
-                        <input type="radio" id="star9" value="9">
-                        <label for="star9">★</label>
-                        <input type="radio" id="star8" value="8">
-                        <label for="star8">★</label>
-                        <input type="radio" id="star7" value="7">
-                        <label for="star7">★</label>
-                        <input type="radio" id="star6" value="6">
-                        <label for="star6">★</label>
-                        <input type="radio" id="star5" value="5">
-                        <label for="star5">★</label>
-                        <input type="radio" id="star4" value="4">
-                        <label for="star4">★</label>
-                        <input type="radio" id="star3" value="3">
-                        <label for="star3">★</label>
-                        <input type="radio" id="star2" value="2">
-                        <label for="star2">★</label>
-                        <input type="radio" id="star1" value="1">
-                        <label for="star1">★</label>
-                    </div>
+                    
 
                     <label>Comments</label><br>
                     <textarea rows="3" id="comments"></textarea><br>
