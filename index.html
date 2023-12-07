@@ -40,6 +40,7 @@
                 <!--Listening queue-->
             </tbody>
         </table>
+        <p id="songsNum" style="display: none;"></p><br>
         <table id="playHistoryTable" style="display: none;">
             <tbody>
                 <!--Play history-->
@@ -157,8 +158,6 @@
 
                     <input type="hidden" id="listens" value="0">
                     <input type="hidden" id="fullListens" value="0">
-                    <input type="hidden" id="likeStatus" value="neutral">
-                    <input type="hidden" id="shuffleWeight" value="0.6">
                 </div>
                 <br>
                 <input type="button" onclick="addMetadata()" value="Save metadata">

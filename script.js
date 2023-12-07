@@ -1,11 +1,9 @@
-﻿var supportedExtensions = ["mp3", "wav", "ogg"];
-var fileData = ["", "", "", "", "", NaN, NaN, [], 0, "", [], 0, 0, 0, 0, [], "", 0];
+﻿const supportedExtensions = ["mp3", "wav", "ogg"];
+var fileData = ["", "", "", "", "", NaN, NaN, [], 0, "", [], 0, 0, 0, 0];
                 //URL, Title, Artist, Album, Contributors, Year, BPM, Genre(s), Rating/10,
-                //Comments, Tags, Uploaded time, Length (s), # Listens, # Full listens, 
-                //Playlists added to, Like/dislike/neutral, Shuffle weight
+                //Comments, Tags, Uploaded time, Length (s), # Listens, # Full listens
 var genres = [];
 var tags = [];
-var playlists = []; //[Playlist name, Time added to playlist]
 var listeningQueue = [];
 var playHistory = [];
 var flFlag = true;
@@ -33,9 +31,6 @@ function addMetadata() {
     //fileData[12] = file length got on audio load
     fileData[13] = expandedForm.querySelector("#listens").value;
     fileData[14] = expandedForm.querySelector("#fullListens").value;
-    fileData[15] = [["Play History", time], ["Listening Queue", time]];
-    fileData[16] = expandedForm.querySelector("#likeStatus").value;
-    fileData[17] = expandedForm.querySelector("#shuffleWeight").value;
 
     //console.log(fileData); //For testing purposes
 
@@ -78,8 +73,6 @@ function inputValidation() {
 
 function clearForm() {
     //Manual form clear, resets all inputs and their values, as well as changed labels from input
-    var expandedForm = document.getElementById("expandedForm");
-    expandedForm.querySelector("#shuffleWeight").value = 0.6; //Default shuffle weight
     document.getElementById("rating").textContent = "";
     document.getElementById("comments").value = "";
     //Clear lists of genres and tags
@@ -129,13 +122,13 @@ function addToTable(fmetadata, tblName = "lqueueTable") {
         cell3.title = "Year";
     }
     
-    var d = Math.round(fmetadata[12]);
-    var m = Math.floor(d / 60);
-    var s = d % 60;
-    if (s < 10) {
-        s = "0" + s;
+    var dur = Math.round(fmetadata[12]);
+    var min = Math.floor(dur / 60);
+    var sec = dur % 60;
+    if (sec < 10) {
+        sec = "0" + sec;
     }
-    cell4.innerHTML = m + ":" + s; //Length (m:ss)
+    cell4.innerHTML = min + ":" + sec; //Length (m:ss)
     cell4.title = "Length";
 
     if (fmetadata[7].length != 0 || fmetadata[10].length != 0 || "" + fmetadata[6] !== "NaN") {
@@ -176,6 +169,11 @@ function addToTable(fmetadata, tblName = "lqueueTable") {
         });
     }
 
+    //Update play history song number label
+    if (tblName == "playHistoryTable") {
+        document.getElementById("songsNum").innerHTML = "Songs: " + playHistory.length;
+    }
+
     newRow.addEventListener("dblclick", () => { changeSongOnDblClick(url); }); //Send url to change song function
 }
 
@@ -189,6 +187,10 @@ function removeFromTable(rowIndex, tblName = "lqueueTable") {
             table.deleteRow(rowIndex + 1);
         }
         table.deleteRow(rowIndex);
+    }
+
+    if (tblName == "playHistoryTable") {
+        document.getElementById("songsNum").innerHTML = "Songs: " + playHistory.length;
     }
 }
 
@@ -266,23 +268,25 @@ function viewPlayHistory() {
     var playHistoryTable = document.getElementById("playHistoryTable");
     var viewHistory = document.getElementById("viewHistory");
     var playlistName = document.getElementById("playlistName");
+    var songsNum = document.getElementById("songsNum");
 
     if (playHistoryTable.style.display == "none") {
         //Change visible table to play history
         lqueueTable.style.display = "none";
         playHistoryTable.style.display = "table";
         viewHistory.value = "View Listening Queue";
+        songsNum.style.display = "initial";
         if (playHistory.length > 0) {
             playlistName.innerHTML = "Play History";
         } else {
             playlistName.innerHTML = "Start listening to begin your history!";
         }
-
     } else {
         //Change visible table to listening queue (default)
         lqueueTable.style.display = "table";
         playHistoryTable.style.display = "none";
         viewHistory.value = "View Play History";
+        songsNum.style.display = "none";
         if (listeningQueue.length > 0) {
             playlistName.innerHTML = "Listening Queue";
         } else {
@@ -384,7 +388,6 @@ document.addEventListener("DOMContentLoaded", () => {
             });
             //Update rating label
             rating.textContent = radioButton.value;
-            document.getElementById("expandedForm").querySelector("#shuffleWeight").value = rating.textContent / 10;
         });
     });
 
