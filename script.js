@@ -104,6 +104,14 @@ function addToTable(fmetadata, tblName = "lqueueTable") {
     var cell3 = newRow.insertCell(2);
     var cell4 = newRow.insertCell(3);
     var url = fmetadata[0];
+    var tblList = listeningQueue;
+
+    //Update play history song number label
+    if (tblName == "playHistoryTable") {
+        document.getElementById("songsNum").innerHTML = "Songs: " + playHistory.length;
+        //Send playHistory list for onDoubleClick function
+        tblList = playHistory;
+    }
 
     //Title Artist (Contributors)
     if (fmetadata[4] != "") {
@@ -147,7 +155,7 @@ function addToTable(fmetadata, tblName = "lqueueTable") {
         }
 
         expNewRow.style.display = "none";
-        expNewRow.addEventListener("dblclick", () => { changeSongOnDblClick(url); });
+        expNewRow.addEventListener("dblclick", () => { changeSongOnDblClick(url, tblList); });
         newRow.addEventListener("click", () => {
             expNewRow.style.display = expNewRow.style.display == "none" ? "table-row" : "none";
         }); //Alternate visibility of expanded row on click
@@ -161,18 +169,13 @@ function addToTable(fmetadata, tblName = "lqueueTable") {
         e2Cell1.title = "User Comments";
 
         expNewRow2.style.display = "none";
-        expNewRow2.addEventListener("dblclick", () => { changeSongOnDblClick(url); });
+        expNewRow2.addEventListener("dblclick", () => { changeSongOnDblClick(url, tblList); });
         newRow.addEventListener("click", () => {
             expNewRow2.style.display = expNewRow2.style.display == "none" ? "table-row" : "none";
         });
     }
 
-    //Update play history song number label
-    if (tblName == "playHistoryTable") {
-        document.getElementById("songsNum").innerHTML = "Songs: " + playHistory.length;
-    }
-
-    newRow.addEventListener("dblclick", () => { changeSongOnDblClick(url); }); //Send url to change song function
+    newRow.addEventListener("dblclick", () => { changeSongOnDblClick(url, tblList); });
 }
 
 function removeFromTable(rowIndex, tblName = "lqueueTable") {
@@ -392,11 +395,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             //Update rating metadata based on song playing from playhistory or listeningqueue
             var songSrc = document.getElementById("audioPlayback").src;
-            if (document.getElementById("playHistoryTable").style.display == "none") {
-                listeningQueue.find((song) => { if (song[0] == songSrc) { song[8] = radioButton.value; } });
-            } else {
-                playHistory.find((song) => { if (song[0] == songSrc) { song[8] = radioButton.value; } });
-            }
+            listeningQueue.find((song) => { if (song[0] == songSrc) { song[8] = radioButton.value; } });
+            playHistory.find((song) => { if (song[0] == songSrc) { song[8] = radioButton.value; } });
         });
     });
 
@@ -545,7 +545,11 @@ function acSkip() {
 //Event listener for end of song
 function endSongListener() {
     document.getElementById("play-pause").value = "▶";
-    nextSong();
+    if (document.getElementById("playHistoryTable").style.display == "none") {
+        nextSong();
+    } else {
+        nextSong(playHistory);
+    }
 }
 
 function nextSong(playlist = listeningQueue) {
@@ -600,7 +604,6 @@ function nextSong(playlist = listeningQueue) {
 }
 
 function changeSongOnDblClick(url, playlist = listeningQueue) {
-    //TODO fix bug from playHistory, dblclick doesnt change song unless its also in listeningqueue
     //Check if audio playback is in popped-out window, if so don't update hidden audio in original page
     if (document.getElementById("playback").style.display == "none") {
         return;
