@@ -146,13 +146,11 @@ function addToTable(fmetadata, tblName = "lqueueTable") {
             eCell3.title = "Beats-per-minute";
         }
 
-        expNewRow.style.visibility = "collapse";
+        expNewRow.style.display = "none";
         expNewRow.addEventListener("dblclick", () => { changeSongOnDblClick(url); });
         newRow.addEventListener("click", () => {
-            expNewRow.style.visibility = expNewRow.style.visibility == "collapse" ? "visible" : "collapse";
+            expNewRow.style.display = expNewRow.style.display == "none" ? "table-row" : "none";
         }); //Alternate visibility of expanded row on click
-        //NOTE: There is a visual bug where the lqueue div becomes scrollable on any row having its visibility set to collapse.
-        //I have checked this in multiple browsers (FireFox version 120.0.1 & Chrome version 119.0.6045.200), this bug occurs on FireFox but not Chrome.
     }
     if (fmetadata[9].length != 0) {
         var expNewRow2 = table.insertRow(table.rows.length);
@@ -162,10 +160,10 @@ function addToTable(fmetadata, tblName = "lqueueTable") {
         e2Cell1.innerHTML = fmetadata[9]; //Comments
         e2Cell1.title = "User Comments";
 
-        expNewRow2.style.visibility = "collapse";
+        expNewRow2.style.display = "none";
         expNewRow2.addEventListener("dblclick", () => { changeSongOnDblClick(url); });
         newRow.addEventListener("click", () => {
-            expNewRow2.style.visibility = expNewRow2.style.visibility == "collapse" ? "visible" : "collapse";
+            expNewRow2.style.display = expNewRow2.style.display == "none" ? "table-row" : "none";
         });
     }
 
