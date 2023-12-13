@@ -26,7 +26,7 @@ function addMetadata() {
     fileData[5] = Number(expandedForm.querySelector("#year").value);
     fileData[6] = Number(expandedForm.querySelector("#bpm").value);
     fileData[7] = genres;
-    //fileData[8] = document.getElementById("#rating").textContent;
+    //fileData[8] = file rating updated on rating change
     fileData[9] = expandedForm.querySelector("#comments").value;
     fileData[10] = tags;
     fileData[11] = time;
@@ -40,19 +40,16 @@ function addMetadata() {
     document.getElementById("playlistName").innerHTML = "Listening Queue";
     addToTable(fileData);
 
-    //Send audio to playback source
     if (document.getElementById("audioPlayback").src.endsWith("Assets/tempBlankAudio.mp3")) {
+        //Send audio to playback source
         document.getElementById("audioPlayback").src = fileData[0];
         document.getElementById("audio").load();
-        flFlag = true;
         
         if (fileData[2].length > 0) {
             document.getElementById("displayFileData").innerHTML = fileData[2] + " - " + fileData[1]; //Artist - title
         } else {
             document.getElementById("displayFileData").innerHTML = fileData[1]; //Title
         }
-        //playHistory.push([].concat(fileData)); //Add copy of fileData to playHistory for current songs data
-        //addToTable(fileData, "playHistoryTable");
     }
     clearForm();
     document.getElementById("metadataForm").style.display = "none";
@@ -98,6 +95,9 @@ function clearForm() {
 }
 
 function addToTable(fmetadata, tblName = "lqueueTable") {
+    if (document.getElementById(tblName) == null) {
+        return;
+    }
     var table = document.getElementById(tblName).getElementsByTagName("tbody")[0];
     var newRow = table.insertRow(table.rows.length);
     newRow.className = "trBasic";
@@ -182,6 +182,9 @@ function addToTable(fmetadata, tblName = "lqueueTable") {
 
 function removeFromTable(rowIndex, tblName = "lqueueTable") {
     var table = document.getElementById(tblName);
+    if (table == null) {
+        return;
+    }
     if (table.rows[rowIndex]) {
         if (table.rows[rowIndex + 1] && table.rows[rowIndex + 1].className != "trBasic") {
             if (table.rows[rowIndex + 2] && table.rows[rowIndex + 2].className != "trBasic") {
@@ -272,6 +275,8 @@ function viewPlayHistory() {
     var viewHistory = document.getElementById("viewHistory");
     var playlistName = document.getElementById("playlistName");
     var songsNum = document.getElementById("songsNum");
+    var playFirst = document.getElementById("playFirst");
+    var playLast = document.getElementById("playLast");
 
     if (playHistoryTable.style.display == "none") {
         //Change visible table to play history
@@ -279,6 +284,8 @@ function viewPlayHistory() {
         playHistoryTable.style.display = "table";
         viewHistory.value = "View Listening Queue";
         songsNum.style.display = "initial";
+        playFirst.onclick = function () { pcFirst(playHistory); };
+        playLast.onclick = function () { pcLast(playHistory); };
         if (playHistory.length > 0) {
             playlistName.innerHTML = "Play History";
         } else {
@@ -290,6 +297,8 @@ function viewPlayHistory() {
         playHistoryTable.style.display = "none";
         viewHistory.value = "View Play History";
         songsNum.style.display = "none";
+        playFirst.onclick = function () { pcFirst(); };
+        playLast.onclick = function () { pcLast(); };
         if (listeningQueue.length > 0) {
             playlistName.innerHTML = "Listening Queue";
         } else {
@@ -380,6 +389,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    document.getElementById("audio").addEventListener("ended", endSongListener);
+
     var radioButtons = document.getElementsByClassName("ratingscale")[0].querySelectorAll('input[type="radio"]');
     radioButtons.forEach((radioButton) => {
         //On page reload, uncheck all radiobuttons
@@ -435,8 +446,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (fileInput !== null) {
         fileInput.addEventListener("change", fileListener);
     }
-    
-    document.getElementById("audio").addEventListener("ended", endSongListener);
 });
 
 function acPrev(playlist = playHistory) {
@@ -464,19 +473,7 @@ function acPrev(playlist = playHistory) {
 
     if (index > 0) {
         index--;
-
-        //Send prev audio to playback source
-        document.getElementById("audioPlayback").src = playlist[index][0];
-        if (playlist[index][2].length > 0) {
-            document.getElementById("displayFileData").innerHTML = playlist[index][2] + " - " + playlist[index][1]; //Artist - title
-        } else {
-            document.getElementById("displayFileData").innerHTML = playlist[index][1]; //Title
-        }
-        audio.load();
-        updateRating(playlist[index][8]);
-        flFlag = true;
-        audio.play();
-        document.getElementById("play-pause").value = "⏸";
+        updateSong(playlist[index]);
     }
 }
 
@@ -544,8 +541,22 @@ function acSkip() {
     flFlag = false;
 }
 
-function pcFirst() {
-    //TODO go back to first song
+function pcFirst(playlist = listeningQueue) {
+    var audio = document.getElementById("audio");
+    audio.currentTime = 0;
+    
+    var index = 0;
+    index = playlist.findIndex((song) => song[0] == document.getElementById("audioPlayback").src); //Find index of current song
+
+    if (index < 0) {
+        return;
+    }
+
+    playlist[index][13]++; //Add listen to current song
+
+    //Send first audio to playback source
+    index = 0;
+    updateSong(playlist[index]);
 }
 
 function pcShuffle() {
@@ -573,14 +584,26 @@ function pcLoop() {
     }
 }
 
-function pcLast() {
-    //TODO skip to last song
+function pcLast(playlist = listeningQueue) {
+    var index = 0;
+    index = playlist.findIndex((song) => song[0] == document.getElementById("audioPlayback").src); //Find index of current song
+
+    if (index < 0) {
+        return;
+    }
+
+    playlist[index][13]++; //Add listen to current song
+
+    //Send last audio to playback source
+    index = playlist.length - 1;
+    updateSong(playlist[index]);
 }
 
 //Event listener for end of song
 function endSongListener() {
+    var playHistoryTable = document.getElementById("playHistoryTable");
     document.getElementById("play-pause").value = "▶";
-    if (document.getElementById("playHistoryTable").style.display == "none") {
+    if (playHistoryTable == null || playHistoryTable.style.display == "none") {
         nextSong();
     } else {
         nextSong(playHistory);
@@ -594,7 +617,6 @@ function nextSong(playlist = listeningQueue) {
         playlist = document.getElementById("lQueuePopout").innerHTML.split("ENDOFSONG").map((s) => s.split(','));
     }
 
-    var audio = document.getElementById("audio");
     var index = 0;
     index = playlist.findIndex((song) => song[0] == document.getElementById("audioPlayback").src); //Find index of current song
 
@@ -616,7 +638,6 @@ function nextSong(playlist = listeningQueue) {
     //Get random song index for next song if shuffle option enabled
     if (playlistShuffle) {
         index = Math.floor(Math.random() * playlist.length);
-        console.log(index);
     } else {
         index++;
     }
@@ -634,20 +655,7 @@ function nextSong(playlist = listeningQueue) {
             index = 0;
         }
 
-        //Send next audio to playback source
-        document.getElementById("audioPlayback").src = playlist[index][0];
-        if (playlist[index][2].length > 0) {
-            document.getElementById("displayFileData").innerHTML = playlist[index][2] + " - " + playlist[index][1]; //Artist - title
-        } else {
-            document.getElementById("displayFileData").innerHTML = playlist[index][1]; //Title
-        }
-        audio.load();
-        updateRating(playlist[index][8]);
-        playHistory.push([].concat(playlist[index]));
-        addToTable(playlist[index], "playHistoryTable");
-        flFlag = true;
-        audio.play();
-        document.getElementById("play-pause").value = "⏸";
+        updateSong(playlist[index]);
     }
 }
 
@@ -656,7 +664,6 @@ function changeSongOnDblClick(url, playlist = listeningQueue) {
     if (document.getElementById("playback").style.display == "none") {
         return;
     }
-    var audio = document.getElementById("audio");
     var index = 0;
     index = playlist.findIndex(song => song[0] == document.getElementById("audioPlayback").src); //Find index of playlist where songs source url matches
 
@@ -667,23 +674,32 @@ function changeSongOnDblClick(url, playlist = listeningQueue) {
     //Get song to change audio playback to
     var song = playlist.find((s) => s[0] == url);
     if (song !== undefined) {
-        document.getElementById("audioPlayback").src = url;
-        if (song[2].length > 0) {
-            document.getElementById("displayFileData").innerHTML = song[2] + " - " + song[1]; //Artist - title
-        } else {
-            document.getElementById("displayFileData").innerHTML = song[1]; //Title
-        }
-        audio.load();
-        updateRating(song[8]);
-        playHistory.push([].concat(song));
-        addToTable(song, "playHistoryTable");
-        flFlag = true;
-        audio.play();
-        document.getElementById("play-pause").value = "⏸";
+        updateSong(song);
     }
 }
 
+function updateSong(arr) {
+    //Send audio to playback source
+    var audio = document.getElementById("audio");
+    document.getElementById("audioPlayback").src = arr[0];
+    if (arr[2].length > 0) {
+        document.getElementById("displayFileData").innerHTML = arr[2] + " - " + arr[1]; //Artist - title
+    } else {
+        document.getElementById("displayFileData").innerHTML = arr[1]; //Title
+    }
+    audio.load();
+    updateRating(arr[8]);
+    playHistory.push([].concat(arr));
+    addToTable(arr, "playHistoryTable");
+    flFlag = true;
+    audio.play();
+    document.getElementById("play-pause").value = "⏸";
+}
+
 function updateRating(val) {
+    if (document.getElementById("rating") == null) {
+        return;
+    }
     //Clear current ratingscale
     document.getElementById("rating").textContent = "";
     var ratingBtns = document.getElementsByClassName("ratingscale")[0].querySelectorAll('input[type="radio"]');

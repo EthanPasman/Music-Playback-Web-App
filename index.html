@@ -28,6 +28,7 @@
             <input type="button" id="loop" value="↻" onclick="acLoop()" title="Loop song">
             <input type="button" id="skip" value="»" onclick="acSkip()" title="Next song">
         </div>
+
         <audio id="audio" controls preload="metadata">
             <source src="Assets/tempBlankAudio.mp3" id="audioPlayback">
         </audio>
@@ -60,23 +61,25 @@
     <div id="lqueue">
         <h1 id="playlistName">Upload a song to start listening!</h1>
         <div id="playlistControls">
-            <!--<input type="button" id="playFirst" value="«" onclick="pcFirst()" title="First song">-->
+            <input type="button" id="playFirst" value="«" onclick="pcFirst()" title="First song">
             <input type="button" id="shuffle" value="⤭" onclick="pcShuffle()" title="Shuffle playlist">
             <input type="button" id="loopList" value="↻" onclick="pcLoop()" title="Loop playlist">
-            <!--<input type="button" id="playLast" value="»" onclick="pcLast()" title="Last song">-->
+            <input type="button" id="playLast" value="»" onclick="pcLast()" title="Last song">
         </div><br>
-    <table id="lqueueTable">
-        <tbody>
-            <!--Listening queue-->
+
+        <table id="lqueueTable">
+            <tbody>
+                <!--Listening queue-->
             </tbody>
-            </table>
-            <p id="songsNum" style="display: none;"></p><br>
-            <table id="playHistoryTable" style="display: none;">
-                <tbody>
-                    <!--Play history-->
-                </tbody>
-            </table>
-        </div>
+        </table>
+
+        <p id="songsNum" style="display: none;"></p><br>
+        <table id="playHistoryTable" style="display: none;">
+            <tbody>
+                <!--Play history-->
+            </tbody>
+        </table>
+    </div>
 
     <div id="upload">
         <div id="uploadInput">
@@ -88,7 +91,6 @@
         <div id="metadataForm" hidden>
             <h3>Metadata</h3>
             <form>
-
                 <label>Title</label>
                 <input type="text" id="title"><br>
                 <label>Artist</label>
@@ -139,12 +141,10 @@
                     </datalist>
                     <input type="button" onclick="addGenre()" value="Add"><br>
                     <div id="genreList"></div><br>
-
                     
-
                     <label>Comments</label><br>
                     <textarea rows="3" id="comments"></textarea><br>
-
+                    
                     <label>Tags</label>
                     <input list="tagOptions" id="tag">
                     <datalist id="tagOptions">
@@ -163,7 +163,7 @@
                     </datalist>
                     <input type="button" onclick="addTag()" value="Add"><br>
                     <div id="tagList"></div><br>
-
+                    
                     <input type="hidden" id="listens" value="0">
                     <input type="hidden" id="fullListens" value="0">
                 </div>
