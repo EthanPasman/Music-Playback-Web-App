@@ -454,7 +454,7 @@ function acPrev(playlist = playHistory) {
     }
     
     var index = 0;
-    index = playlist.findIndex((song) => { song[0] == document.getElementById("audioPlayback").src; }); //Find index of current song
+    index = playlist.findIndex((song) => song[0] == document.getElementById("audioPlayback").src); //Find index of current song
 
     if (index < 0) {
         return;
