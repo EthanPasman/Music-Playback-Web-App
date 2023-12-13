@@ -8,6 +8,8 @@ var listeningQueue = [];
 var playHistory = [];
 var flFlag = true;
 var seekTime = 0;
+var playlistShuffle = false;
+var playlistLoop = false;
 
 function addMetadata() {
     var time = Date.now();
@@ -452,7 +454,7 @@ function acPrev(playlist = playHistory) {
     }
     
     var index = 0;
-    index = playlist.findIndex(song => song[0] == document.getElementById("audioPlayback").src); //Find index of playlist where songs source url matches
+    index = playlist.findIndex((song) => { song[0] == document.getElementById("audioPlayback").src; }); //Find index of current song
 
     if (index < 0) {
         return;
@@ -542,6 +544,39 @@ function acSkip() {
     flFlag = false;
 }
 
+function pcFirst() {
+    //TODO go back to first song
+}
+
+function pcShuffle() {
+    var pcshuffle = document.getElementById("shuffle");
+
+    if (playlistShuffle == false) {
+        playlistShuffle = true;
+        pcshuffle.style.color = "white";
+        endSongListener();
+    } else {
+        playlistShuffle = false;
+        pcshuffle.style.color = "lightblue";
+    }
+}
+
+function pcLoop() {
+    var pcloop = document.getElementById("loopList");
+
+    if (playlistLoop == false) {
+        playlistLoop = true;
+        pcloop.style.color = "white";
+    } else {
+        playlistLoop = false;
+        pcloop.style.color = "lightblue";
+    }
+}
+
+function pcLast() {
+    //TODO skip to last song
+}
+
 //Event listener for end of song
 function endSongListener() {
     document.getElementById("play-pause").value = "▶";
@@ -561,7 +596,7 @@ function nextSong(playlist = listeningQueue) {
 
     var audio = document.getElementById("audio");
     var index = 0;
-    index = playlist.findIndex(song => song[0] == document.getElementById("audioPlayback").src); //Find index of playlist where songs source url matches
+    index = playlist.findIndex((song) => song[0] == document.getElementById("audioPlayback").src); //Find index of current song
 
     if (index < 0) {
         return;
@@ -571,16 +606,29 @@ function nextSong(playlist = listeningQueue) {
         playHistory.push([].concat(playlist[index]));
         addToTable(playlist[index], "playHistoryTable");
     }
-    //Add a listen and full listen is flag is true
+
+    //Add a listen and full listen if flag is true
     playlist[index][13]++;
     if (flFlag) {
         playlist[index][14]++;
     }
 
-    index++;
-    if (playlist.length > index) {
+    //Get random song index for next song if shuffle option enabled
+    if (playlistShuffle) {
+        index = Math.floor(Math.random() * playlist.length);
+        console.log(index);
+    } else {
+        index++;
+    }
+
+    if (playlist.length > index || playlistLoop) {
+        if (playlistLoop && index >= playlist.length) {
+            //Restart playlist if loop option enabled
+            index = 0;
+        }
+
         //Remove from listening queue on listen
-        if (playlist == listeningQueue) {
+        if (playlist == listeningQueue && playlist.length > 1) {
             listeningQueue.shift();
             removeFromTable(0);
             index = 0;

@@ -59,18 +59,24 @@
 
     <div id="lqueue">
         <h1 id="playlistName">Upload a song to start listening!</h1>
-        <table id="lqueueTable">
-            <tbody>
-                <!--Listening queue-->
+        <div id="playlistControls">
+            <!--<input type="button" id="playFirst" value="«" onclick="pcFirst()" title="First song">-->
+            <input type="button" id="shuffle" value="⤭" onclick="pcShuffle()" title="Shuffle playlist">
+            <input type="button" id="loopList" value="↻" onclick="pcLoop()" title="Loop playlist">
+            <!--<input type="button" id="playLast" value="»" onclick="pcLast()" title="Last song">-->
+        </div><br>
+    <table id="lqueueTable">
+        <tbody>
+            <!--Listening queue-->
             </tbody>
-        </table>
-        <p id="songsNum" style="display: none;"></p><br>
-        <table id="playHistoryTable" style="display: none;">
-            <tbody>
-                <!--Play history-->
-            </tbody>
-        </table>
-    </div>
+            </table>
+            <p id="songsNum" style="display: none;"></p><br>
+            <table id="playHistoryTable" style="display: none;">
+                <tbody>
+                    <!--Play history-->
+                </tbody>
+            </table>
+        </div>
 
     <div id="upload">
         <div id="uploadInput">

@@ -167,21 +167,21 @@ input:invalid {
     overflow-y: auto;
 }
 
-#controls {
+#controls, #playlistControls {
     background-color: #131116;
     border-radius: 10px;
     width: auto;
     height: auto;
 }
 
-#controls input {
+#controls input, #playlistControls input {
     background: none;
     color: lightblue;
     margin: 0px 0px;
     padding: 2px 7px;
 }
 
-#play-pause, #prev, #skip {
+#play-pause, #prev, #skip, #playFirst, #playLast {
     width: 50px;
 }
 
