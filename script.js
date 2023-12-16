@@ -10,7 +10,7 @@ var flFlag = true;
 var seekTime = 0;
 var playlistShuffle = false;
 var playlistLoop = false;
-var saveDataOnUnload = true;
+//var saveDataOnUnload = true;
 
 function addMetadata() {
     var time = Date.now();
@@ -376,6 +376,7 @@ function removeTag(tag) {
     tags = tags.filter(t => t != tag);
 }
 
+/*
 function repopulate() {
     listeningQueue = JSON.parse(localStorage.getItem("listeningQueue"));
     playHistory = JSON.parse(localStorage.getItem("playHistory"));
@@ -387,14 +388,17 @@ function repopulate() {
 
     document.getElementById("audioPlayback").src = localStorage.getItem("src");
 }
+*/
 
 function clearData() {
     var res = window.confirm("Are you sure you want to clear all data? This cannot be undone.");
     if (res) {
+        /*
         if (typeof Storage !== 'undefined') {
             localStorage.clear();
         }
         saveDataOnUnload = false;
+        */
         window.location.reload();
     }
 }
@@ -405,11 +409,13 @@ document.addEventListener("DOMContentLoaded", () => {
     var rating = document.getElementById("rating");
     var tempAudio = document.createElement("audio");
 
+    /*
     //Check if state was saved upon last page close, if so repopulate page
     if (typeof Storage !== 'undefined' && localStorage.getItem("src") !== null) {
         repopulate();
     }
     saveDataOnUnload = true;
+    */
 
     //Get audio duration from file upload on temp audio element metadata load
     tempAudio.onloadedmetadata = function () {
@@ -478,6 +484,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+/*
 window.addEventListener("beforeunload", () => {
     if (typeof Storage !== 'undefined' && saveDataOnUnload) {
         localStorage.setItem("src", document.getElementById("audioPlayback").src);
@@ -486,6 +493,7 @@ window.addEventListener("beforeunload", () => {
         localStorage.setItem("fileData", JSON.stringify(fileData));
     }
 });
+*/
 
 function acPrev(playlist = playHistory) {
     //Check if function was called from a popped-out window or the original window
