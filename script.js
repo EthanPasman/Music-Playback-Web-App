@@ -10,6 +10,7 @@ var flFlag = true;
 var seekTime = 0;
 var playlistShuffle = false;
 var playlistLoop = false;
+var saveDataOnUnload = true;
 
 function addMetadata() {
     var time = Date.now();
@@ -375,11 +376,40 @@ function removeTag(tag) {
     tags = tags.filter(t => t != tag);
 }
 
+function repopulate() {
+    listeningQueue = JSON.parse(localStorage.getItem("listeningQueue"));
+    playHistory = JSON.parse(localStorage.getItem("playHistory"));
+    fileData = JSON.parse(localStorage.getItem("fileData"));
+
+    //Repopulate tables
+    listeningQueue.forEach((lqSong) => { addToTable(lqSong); });
+    playHistory.forEach((phSong) => { addToTable(phSong, "playHistoryTable"); });
+
+    document.getElementById("audioPlayback").src = localStorage.getItem("src");
+}
+
+function clearData() {
+    var res = window.confirm("Are you sure you want to clear all data? This cannot be undone.");
+    if (res) {
+        if (typeof Storage !== 'undefined') {
+            localStorage.clear();
+        }
+        saveDataOnUnload = false;
+        window.location.reload();
+    }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     var fileInput = document.getElementById("fileInput");
     var unsupportedFileType = document.getElementById("unsupportedFileType");
     var rating = document.getElementById("rating");
     var tempAudio = document.createElement("audio");
+
+    //Check if state was saved upon last page close, if so repopulate page
+    if (typeof Storage !== 'undefined' && localStorage.getItem("src") !== null) {
+        repopulate();
+    }
+    saveDataOnUnload = true;
 
     //Get audio duration from file upload on temp audio element metadata load
     tempAudio.onloadedmetadata = function () {
@@ -445,6 +475,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     if (fileInput !== null) {
         fileInput.addEventListener("change", fileListener);
+    }
+});
+
+window.addEventListener("beforeunload", () => {
+    if (typeof Storage !== 'undefined' && saveDataOnUnload) {
+        localStorage.setItem("src", document.getElementById("audioPlayback").src);
+        localStorage.setItem("listeningQueue", JSON.stringify(listeningQueue));
+        localStorage.setItem("playHistory", JSON.stringify(playHistory));
+        localStorage.setItem("fileData", JSON.stringify(fileData));
     }
 });
 
@@ -542,6 +581,10 @@ function acSkip() {
 }
 
 function pcFirst(playlist = listeningQueue) {
+    //Check if audio playback is in popped-out window, if so don't update hidden audio in original page
+    if (document.getElementById("playback").style.display == "none") {
+        return;
+    }
     var audio = document.getElementById("audio");
     audio.currentTime = 0;
     
@@ -560,6 +603,9 @@ function pcFirst(playlist = listeningQueue) {
 }
 
 function pcShuffle() {
+    if (document.getElementById("playback").style.display == "none") {
+        return;
+    }
     var pcshuffle = document.getElementById("shuffle");
 
     if (playlistShuffle == false) {
@@ -573,6 +619,9 @@ function pcShuffle() {
 }
 
 function pcLoop() {
+    if (document.getElementById("playback").style.display == "none") {
+        return;
+    }
     var pcloop = document.getElementById("loopList");
 
     if (playlistLoop == false) {
@@ -585,6 +634,9 @@ function pcLoop() {
 }
 
 function pcLast(playlist = listeningQueue) {
+    if (document.getElementById("playback").style.display == "none") {
+        return;
+    }
     var index = 0;
     index = playlist.findIndex((song) => song[0] == document.getElementById("audioPlayback").src); //Find index of current song
 
